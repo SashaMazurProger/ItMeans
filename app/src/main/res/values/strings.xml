@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ItMeans</string>
+    <string name="search_go">Search</string>
 </resources>

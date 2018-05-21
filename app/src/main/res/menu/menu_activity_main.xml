@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_toolbar_search"
+        android:title="@string/search_go"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+    <!--<item-->
+        <!--android:id="@+id/action_edit"-->
+        <!--android:title="@string/edit"-->
+        <!--android:icon="@drawable/icon_toolbar_edit"-->
+        <!--yourapp:showAsAction="ifRoom" />-->
+    <!--<item-->
+        <!--android:id="@+id/action_micro"-->
+        <!--android:title="@string/microphone"-->
+        <!--android:icon="@drawable/icon_toolbar_micro"-->
+        <!--yourapp:showAsAction="always" />-->
+    <!--<item-->
+        <!--android:id="@+id/action_remove"-->
+        <!--android:title="@string/remove"-->
+        <!--android:icon="@drawable/icon_toolbar_remove"-->
+        <!--yourapp:showAsAction="always" />-->
+</menu>
