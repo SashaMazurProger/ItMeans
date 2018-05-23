@@ -178,4 +178,12 @@ public class WordAssociation implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "WordAssociation{" +
+                "entry='" + entry + '\'' +
+                ", assocWord=" + assocWord +
+                ", author='" + author + '\'' +
+                '}';
+    }
 }

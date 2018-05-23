@@ -4,7 +4,7 @@ package com.example.sasham.itmeans.presentation;
  * Created by Sasha M on 10.04.2018.
  */
 
-public interface IDefinitionView {
+public interface DefinitionView {
     void showDefinition(String s);
     void showError();
 }
