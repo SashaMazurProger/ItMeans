@@ -1,5 +1,8 @@
 package com.example.sasham.itmeans;
 
+import com.example.sasham.itmeans.presentation.MainActivity;
+import com.example.sasham.itmeans.viewmodel.WordViewModel;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,5 +16,7 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+//        WordViewModel wordViewModel=new WordViewModel();
+//        assertNotNull(wordViewModel.getWordUseCase());
     }
 }

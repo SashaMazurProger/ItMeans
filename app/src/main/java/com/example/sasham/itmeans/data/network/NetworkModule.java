@@ -1,5 +1,7 @@
 package com.example.sasham.itmeans.data.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -34,6 +36,7 @@ public class NetworkModule {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.TWIN_WORD_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getOkHttpClient(twinWordinterceptor))
                 .build();
 

@@ -1,37 +1,33 @@
 package com.example.sasham.itmeans.data.network;
 
-import android.util.Log;
-
 import com.example.sasham.itmeans.data.WordAssociation;
+import com.example.sasham.itmeans.data.WordDefinition;
 import com.example.sasham.itmeans.data.WordRepository;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
 
 public class NetworkWordRepository implements WordRepository {
     private static final String TAG = NetworkWordRepository.class.getSimpleName();
 
     private WordAssociation resWordAssociation;
 
+    @Inject
+    public NetworkWordRepository() {
+    }
+
     @Override
-    public WordAssociation getWordAssociation(final String word) {
-        resWordAssociation = null;
+    public Observable<WordAssociation> getWordAssociation(final String word) {
 
-        NetworkModule.getTwinWordWebService()
-                .getWordAssociation(word)
-                .enqueue(new Callback<WordAssociation>() {
-                    @Override
-                    public void onResponse(Call<WordAssociation> call, Response<WordAssociation> response) {
-                        resWordAssociation = response.body();
-                    }
+        return NetworkModule.getTwinWordWebService()
+                .getWordAssociation(word);
 
-                    @Override
-                    public void onFailure(Call<WordAssociation> call, Throwable t) {
-                        Log.e(TAG, "onFailure: error", t);
-                    }
-                });
+    }
 
-        return resWordAssociation;
+    @Override
+    public Observable<WordDefinition> getWordDefinition(String word) {
+        return NetworkModule.getTwinWordWebService()
+                .getWordDefinition(word);
     }
 }

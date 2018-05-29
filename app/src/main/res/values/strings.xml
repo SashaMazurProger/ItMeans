@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">ItMeans</string>
     <string name="search_go">Search</string>
+    <string name="definition_verb_title">Verb</string>
+    <string name="definition_noun_title">Noun</string>
+    <string name="association_title">Similar words</string>
+    <string name="not_found">No results</string>
+    <string name="entry_title">Word</string>
 </resources>

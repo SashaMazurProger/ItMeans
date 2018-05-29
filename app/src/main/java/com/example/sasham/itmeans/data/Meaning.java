@@ -100,4 +100,13 @@ public class Meaning implements Parcelable
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "Meaning{" +
+                "noun='" + noun + '\'' +
+                ", verb='" + verb + '\'' +
+                ", adverb='" + adverb + '\'' +
+                ", adjective='" + adjective + '\'' +
+                '}';
+    }
 }
