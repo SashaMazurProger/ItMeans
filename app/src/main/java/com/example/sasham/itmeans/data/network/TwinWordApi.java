@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  * Created by Sasha M on 15.04.2018.
  */
 
-public interface ITwinWordWebService {
+public interface TwinWordApi {
     @GET("/association/")
     Observable<WordAssociation> getWordAssociation(@Query("entry") String word);
 

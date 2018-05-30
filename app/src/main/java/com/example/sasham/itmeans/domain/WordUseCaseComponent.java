@@ -4,6 +4,5 @@ import dagger.Component;
 
 @Component()
 public interface WordUseCaseComponent {
-
     WordUseCase getWordUseCase();
 }
