@@ -1,11 +1,19 @@
 package com.example.sasham.itmeans;
 
-import com.example.sasham.itmeans.presentation.MainActivity;
-import com.example.sasham.itmeans.viewmodel.WordViewModel;
+import com.example.sasham.itmeans.search.SearchActivity;
+import com.example.sasham.itmeans.test.DaggerDataComponent;
+import com.example.sasham.itmeans.test.DaggerTest;
+import com.example.sasham.itmeans.test.DataComponent;
+import com.example.sasham.itmeans.test.DataModule;
+import com.example.sasham.itmeans.test.User;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -14,9 +22,18 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
-//        WordViewModel wordViewModel=new WordViewModel();
-//        assertNotNull(wordViewModel.getWordUseCase());
+    public void adapterTest() throws Exception {
+        User user;
+        DataComponent daggerDataComponent = DaggerDataComponent.builder()
+                .dataModule(new DataModule())
+                .build();
+
+        DaggerTest daggerTest = new DaggerTest();
+        daggerDataComponent.inject(daggerTest);
+        Assert.assertEquals(daggerTest.user.name, "Max");
+
     }
+
 }
+
+

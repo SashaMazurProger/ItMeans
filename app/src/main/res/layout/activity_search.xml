@@ -7,7 +7,7 @@
 
         <variable
             name="wordModel"
-            type="com.example.sasham.itmeans.viewmodel.WordViewModel" />
+            type="com.example.sasham.itmeans.search.WordDetailsViewModel" />
     </data>
 
     <RelativeLayout

@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data;
+package com.example.sasham.itmeans.data.network;
 
 import android.os.Parcel;
 import android.os.Parcelable;

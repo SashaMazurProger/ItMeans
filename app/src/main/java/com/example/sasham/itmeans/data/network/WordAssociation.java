@@ -1,4 +1,8 @@
-package com.example.sasham.itmeans.data;
+package com.example.sasham.itmeans.data.network;
+
+/**
+ * Created by Sasha M on 15.04.2018.
+ */
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,8 +10,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 
-public class WordDefinition implements Parcelable {
+public class WordAssociation implements Parcelable {
 
     @SerializedName("entry")
     @Expose
@@ -18,12 +23,12 @@ public class WordDefinition implements Parcelable {
     @SerializedName("response")
     @Expose
     private String response;
-    @SerializedName("meaning")
+    @SerializedName("assoc_word")
     @Expose
-    private Meaning meaning;
-    @SerializedName("ipa")
+    private List<String> assocWord = null;
+    @SerializedName("assoc_word_ex")
     @Expose
-    private String ipa;
+    private List<String> assocWordEx = null;
     @SerializedName("version")
     @Expose
     private String version;
@@ -39,28 +44,28 @@ public class WordDefinition implements Parcelable {
     @SerializedName("result_msg")
     @Expose
     private String resultMsg;
-    public final static Parcelable.Creator<WordDefinition> CREATOR = new Creator<WordDefinition>() {
+    public final static Parcelable.Creator<WordAssociation> CREATOR = new Creator<WordAssociation>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public WordDefinition createFromParcel(Parcel in) {
-            return new WordDefinition(in);
+        public WordAssociation createFromParcel(Parcel in) {
+            return new WordAssociation(in);
         }
 
-        public WordDefinition[] newArray(int size) {
-            return (new WordDefinition[size]);
+        public WordAssociation[] newArray(int size) {
+            return (new WordAssociation[size]);
         }
 
     };
 
-    protected WordDefinition(Parcel in) {
+    protected WordAssociation(Parcel in) {
         this.entry = ((String) in.readValue((String.class.getClassLoader())));
         this.request = ((String) in.readValue((String.class.getClassLoader())));
         this.response = ((String) in.readValue((String.class.getClassLoader())));
-        this.meaning = ((Meaning) in.readValue((Meaning.class.getClassLoader())));
-        this.ipa = ((String) in.readValue((String.class.getClassLoader())));
+        in.readList(this.assocWord, (java.lang.String.class.getClassLoader()));
+        in.readList(this.assocWordEx, (java.lang.String.class.getClassLoader()));
         this.version = ((String) in.readValue((String.class.getClassLoader())));
         this.author = ((String) in.readValue((String.class.getClassLoader())));
         this.email = ((String) in.readValue((String.class.getClassLoader())));
@@ -68,7 +73,7 @@ public class WordDefinition implements Parcelable {
         this.resultMsg = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public WordDefinition() {
+    public WordAssociation() {
     }
 
     public String getEntry() {
@@ -95,20 +100,20 @@ public class WordDefinition implements Parcelable {
         this.response = response;
     }
 
-    public Meaning getMeaning() {
-        return meaning;
+    public List<String> getAssocWord() {
+        return assocWord;
     }
 
-    public void setMeaning(Meaning meaning) {
-        this.meaning = meaning;
+    public void setAssocWord(List<String> assocWord) {
+        this.assocWord = assocWord;
     }
 
-    public String getIpa() {
-        return ipa;
+    public List<String> getAssocWordEx() {
+        return assocWordEx;
     }
 
-    public void setIpa(String ipa) {
-        this.ipa = ipa;
+    public void setAssocWordEx(List<String> assocWordEx) {
+        this.assocWordEx = assocWordEx;
     }
 
     public String getVersion() {
@@ -153,15 +158,15 @@ public class WordDefinition implements Parcelable {
 
 //    @Override
 //    public String toString() {
-//        return new ToStringBuilder(this).append("entry", entry).append("request", request).append("response", response).append("meaning", meaning).append("ipa", ipa).append("version", version).append("author", author).append("email", email).append("resultCode", resultCode).append("resultMsg", resultMsg).toString();
+//        return new ToStringBuilder(this).append("entry", entry).append("request", request).append("response", response).append("assocWord", assocWord).append("assocWordEx", assocWordEx).append("version", version).append("author", author).append("email", email).append("resultCode", resultCode).append("resultMsg", resultMsg).toString();
 //    }
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(entry);
         dest.writeValue(request);
         dest.writeValue(response);
-        dest.writeValue(meaning);
-        dest.writeValue(ipa);
+        dest.writeList(assocWord);
+        dest.writeList(assocWordEx);
         dest.writeValue(version);
         dest.writeValue(author);
         dest.writeValue(email);
@@ -173,4 +178,12 @@ public class WordDefinition implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "WordAssociation{" +
+                "entry='" + entry + '\'' +
+                ", assocWord=" + assocWord +
+                ", author='" + author + '\'' +
+                '}';
+    }
 }

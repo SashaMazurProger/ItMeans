@@ -6,4 +6,5 @@
     <string name="association_title">Similar words</string>
     <string name="not_found">No results</string>
     <string name="entry_title">Word</string>
+    <string name="action_favorites">Favorites</string>
 </resources>

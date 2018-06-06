@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,12 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = {OkHttpModule.class})
 public class ApiModule {
 
+    @Singleton
     @Provides
     public TwinWordApi twinWordApi(Retrofit retrofit) {
         return retrofit.create(TwinWordApi.class);
     }
 
-
+    @Singleton
     @Provides
     public Retrofit retrofit(OkHttpClient okHttpClient,
                              GsonConverterFactory converterFactory,
@@ -38,17 +40,20 @@ public class ApiModule {
         return retrofit;
     }
 
+    @Singleton
     @Provides
     public RxJava2CallAdapterFactory rxJava2CallAdapterFactory() {
         return RxJava2CallAdapterFactory.create();
     }
 
+    @Singleton
     @Provides
     public Gson gson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         return gsonBuilder.create();
     }
 
+    @Singleton
     @Provides
     GsonConverterFactory gsonConverterFactory(Gson gson) {
         return GsonConverterFactory.create(gson);

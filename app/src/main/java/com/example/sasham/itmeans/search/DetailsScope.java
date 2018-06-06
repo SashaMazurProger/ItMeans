@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.search;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -6,5 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import javax.inject.Scope;
 
 @Scope
-@Retention(RetentionPolicy.CLASS)
-public @interface TwinWordScope { }
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DetailsScope {
+}

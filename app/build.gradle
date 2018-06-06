@@ -17,8 +17,8 @@ android {
         }
     }
 
-    dataBinding{
-        enabled=true
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -53,4 +53,6 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:2.16"
     // if you are not using support library, include this instead
 //    compile "com.google.dagger:dagger-android:$project.daggerVersion"
+
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
 }

@@ -1,15 +1,14 @@
-package com.example.sasham.itmeans.viewmodel;
+package com.example.sasham.itmeans.search;
 
 import android.arch.lifecycle.ViewModel;
 import android.databinding.ObservableField;
 import android.util.Log;
 
-import com.example.sasham.itmeans.data.Meaning;
-import com.example.sasham.itmeans.data.WordAssociation;
-import com.example.sasham.itmeans.data.WordDefinition;
-import com.example.sasham.itmeans.domain.DaggerWordUseCaseComponent;
-import com.example.sasham.itmeans.domain.WordUseCase;
-import com.example.sasham.itmeans.domain.WordUseCaseComponent;
+import com.example.sasham.itmeans.data.network.Meaning;
+import com.example.sasham.itmeans.data.network.WordAssociation;
+import com.example.sasham.itmeans.data.network.WordDefinition;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -18,21 +17,22 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class WordViewModel extends ViewModel {
+public class WordDetailsViewModel extends ViewModel {
     public enum Status {LOADING, SUCCESS, ERROR}
 
-    public static final String TAG = WordViewModel.class.getSimpleName();
+    public static final String TAG = WordDetailsViewModel.class.getSimpleName();
 
     private ObservableField<Status> status = new ObservableField<>();
-    private WordUseCase wordUseCase;
+
+    @Inject
+    public WordDetailsInteractor wordRepository;
+
     private ObservableField<WordDefinition> definition = new ObservableField<>();
     private ObservableField<Meaning> meaning = new ObservableField<>();
     private ObservableField<WordAssociation> association = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public WordViewModel() {
-        WordUseCaseComponent component=DaggerWordUseCaseComponent.builder().build();
-        this.wordUseCase = component.getWordUseCase();
+    public WordDetailsViewModel() {
 
     }
 
@@ -52,14 +52,10 @@ public class WordViewModel extends ViewModel {
         return status;
     }
 
-    public WordUseCase getWordUseCase() {
-        return wordUseCase;
-    }
-
     public void search(String word) {
         Log.d(TAG, "search: " + word);
 
-        wordUseCase.executeDefinition(word)
+        wordRepository.getWordDefinition(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -98,7 +94,7 @@ public class WordViewModel extends ViewModel {
                     }
                 });
 
-        wordUseCase.executeAssociation(word)
+        wordRepository.getWordAssociation(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new Observer<WordAssociation>() {

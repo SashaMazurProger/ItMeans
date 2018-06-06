@@ -1,14 +1,7 @@
 package com.example.sasham.itmeans.data.network;
 
-import com.example.sasham.itmeans.data.WordAssociation;
-import com.example.sasham.itmeans.data.WordDefinition;
-
-import java.util.Map;
-
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.HeaderMap;
 import retrofit2.http.Query;
 
 /**

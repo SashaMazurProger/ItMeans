@@ -1,6 +1,7 @@
-package com.example.sasham.itmeans.presentation;
+package com.example.sasham.itmeans.search;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,55 +9,55 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
+import com.example.sasham.itmeans.BaseApplication;
+import com.example.sasham.itmeans.AppComponent;
 import com.example.sasham.itmeans.R;
-import com.example.sasham.itmeans.databinding.ActivityMainBinding;
+
+import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+import com.example.sasham.itmeans.databinding.ActivitySearchBinding;
+import com.example.sasham.itmeans.favorites.FavoritesActivity;
 import com.example.sasham.itmeans.util.RxUtils;
-import com.example.sasham.itmeans.viewmodel.WordViewModel;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class SearchActivity extends AppCompatActivity {
+    private static final String TAG = SearchActivity.class.getSimpleName();
+    public static final String WORD_EXTRA = "word_extra";
+    public static final String SEARCH_WORD = "search_word";
 
-//    @Inject
-//    WordViewModelFactory viewModelFactory;
-
-    private WordViewModel wordViewModel;
-
-    private ActivityMainBinding binding;
+    private WordDetailsViewModel wordDetailsViewModel;
+    private ActivitySearchBinding binding;
+    private SearchView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_search);
 
 //        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar_base);
 //        setSupportActionBar(toolbar);
 
 
-        wordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
+        WordDetailsComponent detailsComponent = BaseApplication.get(this).createDetailsComponent();
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setWordModel(wordViewModel);
+        wordDetailsViewModel = ViewModelProviders.of(this).get(WordDetailsViewModel.class);
+        detailsComponent.injectWordViewModel(wordDetailsViewModel);
 
-        wordViewModel.getStatus()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        binding.setWordModel(wordDetailsViewModel);
+        wordDetailsViewModel.getStatus()
                 .addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                     @Override
                     public void onPropertyChanged(Observable sender, int propertyId) {
-                        switch (wordViewModel.getStatus().get()) {
+                        switch (wordDetailsViewModel.getStatus().get()) {
                             case LOADING:
                                 onLoading();
                                 break;
@@ -72,34 +73,37 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-//        RxUtils.textInputObservable(binding.searchView)
-//                .debounce(300, TimeUnit.MILLISECONDS)
-//                .filter(new Predicate<String>() {
-//                    @Override
-//                    public boolean test(String s) throws Exception {
-//                        return !s.isEmpty();
-//                    }
-//                })
-//                .distinctUntilChanged()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                               @Override
-//                               public void accept(String s) throws Exception {
-//                                   Log.d(TAG, "accept: ---");
-//                                   wordViewModel.search(s);
-//                               }
-//                           }
-//                );
-
+        checkIntentData();
         onError();
+    }
+
+    private void checkIntentData() {
+        Intent intent=getIntent();
+        if(intent!=null){
+            String action=intent.getAction();
+            if(action.equals(SEARCH_WORD)){
+                FavoriteWord word=(FavoriteWord) intent.getSerializableExtra(WORD_EXTRA);
+                if(word!=null&&!word.getEntry().isEmpty())
+                wordDetailsViewModel.search(word.getEntry());
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
 
-        SearchView search=(SearchView) menu.findItem(R.id.action_search).getActionView();
+        MenuItem favorites=menu.findItem(R.id.action_favorites);
+        favorites.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent=new Intent(SearchActivity.this, FavoritesActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        search = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
         RxUtils.textInputObservable(search)
                 .debounce(300, TimeUnit.MILLISECONDS)
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                                @Override
                                public void accept(String s) throws Exception {
                                    Log.d(TAG, "accept: ---");
-                                   wordViewModel.search(s);
+                                   wordDetailsViewModel.search(s);
                                }
                            }
                 );
@@ -146,6 +150,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        wordViewModel.dispose();
+        wordDetailsViewModel.dispose();
     }
 }
