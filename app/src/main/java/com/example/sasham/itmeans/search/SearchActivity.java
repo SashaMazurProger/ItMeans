@@ -13,10 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.sasham.itmeans.BaseApplication;
-import com.example.sasham.itmeans.AppComponent;
 import com.example.sasham.itmeans.R;
 
-import com.example.sasham.itmeans.data.network.db.FavoriteWord;
 import com.example.sasham.itmeans.databinding.ActivitySearchBinding;
 import com.example.sasham.itmeans.favorites.FavoritesActivity;
 import com.example.sasham.itmeans.util.RxUtils;
@@ -30,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
-    public static final String WORD_EXTRA = "word_extra";
+    public static final String STRING_WORD_EXTRA = "word_extra";
     public static final String SEARCH_WORD = "search_word";
 
     private WordDetailsViewModel wordDetailsViewModel;
@@ -73,8 +71,8 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
 
-        checkIntentData();
         onError();
+        checkIntentData();
     }
 
     private void checkIntentData() {
@@ -82,9 +80,9 @@ public class SearchActivity extends AppCompatActivity {
         if(intent!=null){
             String action=intent.getAction();
             if(action.equals(SEARCH_WORD)){
-                FavoriteWord word=(FavoriteWord) intent.getSerializableExtra(WORD_EXTRA);
-                if(word!=null&&!word.getEntry().isEmpty())
-                wordDetailsViewModel.search(word.getEntry());
+                String word=intent.getStringExtra(STRING_WORD_EXTRA);
+                if(word!=null&&!word.isEmpty())
+                wordDetailsViewModel.search(word);
             }
         }
     }
@@ -151,5 +149,10 @@ public class SearchActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         wordDetailsViewModel.dispose();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BaseApplication.get(this).releaseDetailsComponent();
     }
 }

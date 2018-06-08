@@ -1,12 +1,17 @@
 package com.example.sasham.itmeans.search;
 
 import android.arch.lifecycle.ViewModel;
+import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.util.Log;
 
 import com.example.sasham.itmeans.data.network.Meaning;
 import com.example.sasham.itmeans.data.network.WordAssociation;
 import com.example.sasham.itmeans.data.network.WordDefinition;
+import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -18,22 +23,46 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class WordDetailsViewModel extends ViewModel {
+
+
     public enum Status {LOADING, SUCCESS, ERROR}
 
     public static final String TAG = WordDetailsViewModel.class.getSimpleName();
 
-    private ObservableField<Status> status = new ObservableField<>();
-
     @Inject
-    public WordDetailsInteractor wordRepository;
+    public WordDetailsInteractor detailsInteractor;
 
     private ObservableField<WordDefinition> definition = new ObservableField<>();
     private ObservableField<Meaning> meaning = new ObservableField<>();
     private ObservableField<WordAssociation> association = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private ObservableField<Status> status = new ObservableField<>();
+    private ObservableBoolean isFavoriteWord = new ObservableBoolean();
+
+    private final Observable.OnPropertyChangedCallback checkIfFavoriteCallback = new Observable.OnPropertyChangedCallback() {
+        @Override
+        public void onPropertyChanged(Observable sender, int propertyId) {
+            switch (getStatus().get()) {
+                case SUCCESS:
+                    if (isFavorite()) {
+                        isFavoriteWord.set(true);
+                    } else {
+                        isFavoriteWord.set(false);
+                    }
+                    break;
+                default:
+                    isFavoriteWord.set(false);
+            }
+        }
+    };
 
     public WordDetailsViewModel() {
+        isFavoriteWord.set(false);
+        status.addOnPropertyChangedCallback(checkIfFavoriteCallback);
+    }
 
+    public ObservableBoolean getIsFavoriteWord() {
+        return isFavoriteWord;
     }
 
     public ObservableField<Meaning> getMeaning() {
@@ -55,7 +84,7 @@ public class WordDetailsViewModel extends ViewModel {
     public void search(String word) {
         Log.d(TAG, "search: " + word);
 
-        wordRepository.getWordDefinition(word)
+        detailsInteractor.getWordDefinition(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -94,7 +123,7 @@ public class WordDetailsViewModel extends ViewModel {
                     }
                 });
 
-        wordRepository.getWordAssociation(word)
+        detailsInteractor.getWordAssociation(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new Observer<WordAssociation>() {
@@ -120,6 +149,34 @@ public class WordDetailsViewModel extends ViewModel {
 
                     }
                 });
+    }
+
+    public void clickAddToFavorite() {
+        String word = definition.get().getEntry();
+        if ((word != null && !word.isEmpty())) {
+            if (isFavorite()) {
+                FavoriteWord searchFavoriteWord = detailsInteractor.findByName(word);
+                detailsInteractor.delete(searchFavoriteWord);
+                isFavoriteWord.set(false);
+                Log.d(TAG, "clickAddToFavorite: deleted");
+            } else {
+                FavoriteWord newFavoriteWord = new FavoriteWord(word, new Date().getTime());
+                detailsInteractor.create(newFavoriteWord);
+                isFavoriteWord.set(true);
+                Log.d(TAG, "clickAddToFavorite: added");
+            }
+        }
+    }
+
+    private boolean isFavorite() {
+        String word = definition.get().getEntry();
+        if ((word != null && !word.isEmpty())) {
+            FavoriteWord searchFavoriteWord = detailsInteractor.findByName(word);
+            if (searchFavoriteWord != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void dispose() {

@@ -21,6 +21,13 @@
             android:layout_centerInParent="true"
             android:orientation="vertical">
 
+            <ImageButton
+                android:id="@+id/add_favorite"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_add_favorite"
+                android:backgroundTint="@{wordModel.isFavoriteWord.get()?@color/colorAccent:@android:color/transparent}"
+                android:onClick="@{()->wordModel.clickAddToFavorite()}"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

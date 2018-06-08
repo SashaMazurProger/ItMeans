@@ -1,6 +1,5 @@
 package com.example.sasham.itmeans;
 
-import com.example.sasham.itmeans.search.SearchActivity;
 import com.example.sasham.itmeans.test.DaggerDataComponent;
 import com.example.sasham.itmeans.test.DaggerTest;
 import com.example.sasham.itmeans.test.DataComponent;
@@ -11,10 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import dagger.Component;
-import dagger.Module;
-import dagger.Provides;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -23,15 +18,17 @@ import dagger.Provides;
 public class ExampleUnitTest {
     @Test
     public void adapterTest() throws Exception {
-        User user;
+
         DataComponent daggerDataComponent = DaggerDataComponent.builder()
-                .dataModule(new DataModule())
+                // .dataModule(new DataModule())
                 .build();
 
         DaggerTest daggerTest = new DaggerTest();
         daggerDataComponent.inject(daggerTest);
-        Assert.assertEquals(daggerTest.user.name, "Max");
+        // Assert.assertEquals(daggerTest.user.name, "Max");
 
+        Assert.assertNotNull(daggerTest.bindsTest);
+        Assert.assertEquals(daggerTest.testRepo.getNumb(), 5);
     }
 
 }

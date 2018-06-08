@@ -41,8 +41,7 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerAda
     @Override
     public void onBindViewHolder(Holder holder, final int position) {
         holder.bind(items.get(position));
-        holder.binding
-                .getRoot()
+        holder.binding.getRoot()
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -51,6 +50,17 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerAda
                         }
                     }
                 });
+        holder.binding.getRoot()
+                .setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (listener != null) {
+                            return listener.onLongItemClick(v, items.get(position), position);
+                        }
+                        return false;
+                    }
+                })
+        ;
     }
 
     @Override
@@ -79,5 +89,6 @@ public class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerAda
 
     public interface Listener<T> {
         void onItemClick(View itemRoot, T item, int position);
+        boolean onLongItemClick(View v, T t, int position);
     }
 }
