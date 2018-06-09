@@ -1,14 +1,13 @@
 package com.example.sasham.itmeans;
 
+import android.content.Context;
+
 import com.example.sasham.itmeans.data.network.ApiModule;
 import com.example.sasham.itmeans.data.network.db.RealmModule;
-import com.example.sasham.itmeans.favorites.FavoritesComponent;
-import com.example.sasham.itmeans.favorites.FavoritesModule;
-import com.example.sasham.itmeans.search.WordDetailsComponent;
-import com.example.sasham.itmeans.search.WordDetailsModule;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
 
 @Singleton
@@ -19,7 +18,12 @@ import dagger.Component;
 })
 public interface AppComponent {
 
-    WordDetailsComponent.Builder wordDetailsBuilder();
+    @Component.Builder
+    interface Builder{
+        @BindsInstance
+        Builder context(Context context);
+        AppComponent build();
+    }
 
-    FavoritesComponent.Builder favoritesBuilder();
+    void injectApp(BaseApplication baseApplication);
 }

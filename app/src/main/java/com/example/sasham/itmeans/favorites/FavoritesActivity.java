@@ -15,8 +15,11 @@ import com.example.sasham.itmeans.adapter.BaseRecyclerAdapter;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
 import com.example.sasham.itmeans.search.SearchActivity;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 
 public class FavoritesActivity extends AppCompatActivity {
 
@@ -24,29 +27,32 @@ public class FavoritesActivity extends AppCompatActivity {
     @BindView(R.id.favorites_list)
     RecyclerView favoritesList;
 
+    @Inject
+    public FavoritesViewModel.Factory factory;
 
     private FavoritesViewModel favoritesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
         ButterKnife.bind(this);
 
-        favoritesViewModel = ViewModelProviders.of(this).get(FavoritesViewModel.class);
+        favoritesViewModel = ViewModelProviders.of(this,factory).get(FavoritesViewModel.class);
+//
+//        BaseApplication.get(this)
+//                .createFavoritesComponent()
+//                .inject(favoritesViewModel);
 
-        BaseApplication.get(this)
-                .createFavoritesComponent()
-                .inject(favoritesViewModel);
-
-        final BaseRecyclerAdapter<FavoriteWord> adapter=new BaseRecyclerAdapter<>(R.layout.favorites_item, BR.favorite);
+        final BaseRecyclerAdapter<FavoriteWord> adapter = new BaseRecyclerAdapter<>(R.layout.favorites_item, BR.favorite);
         favoritesList.setLayoutManager(new LinearLayoutManager(this));
         adapter.setItems(favoritesViewModel.favoriteWords());
         adapter.setListener(new BaseRecyclerAdapter.Listener<FavoriteWord>() {
             @Override
             public void onItemClick(View itemRoot, FavoriteWord item, int position) {
-                Intent intent=new Intent(FavoritesActivity.this, SearchActivity.class);
-                intent.putExtra(SearchActivity.STRING_WORD_EXTRA,item.getEntry());
+                Intent intent = new Intent(FavoritesActivity.this, SearchActivity.class);
+                intent.putExtra(SearchActivity.STRING_WORD_EXTRA, item.getEntry());
                 intent.setAction(SearchActivity.SEARCH_WORD);
                 startActivity(intent);
             }
@@ -61,9 +67,4 @@ public class FavoritesActivity extends AppCompatActivity {
         favoritesList.setAdapter(adapter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        BaseApplication.get(this).releaseFavoritesComponent();
-    }
 }

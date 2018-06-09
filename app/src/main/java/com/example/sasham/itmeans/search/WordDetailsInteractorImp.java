@@ -6,6 +6,8 @@ import com.example.sasham.itmeans.data.network.WordDefinition;
 import com.example.sasham.itmeans.data.network.TwinWordApi;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.realm.Realm;
 

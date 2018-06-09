@@ -21,6 +21,9 @@ import com.example.sasham.itmeans.util.RxUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
@@ -35,8 +38,12 @@ public class SearchActivity extends AppCompatActivity {
     private ActivitySearchBinding binding;
     private SearchView search;
 
+    @Inject
+    WordDetailsViewModel.Factory factory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -44,10 +51,10 @@ public class SearchActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 
 
-        WordDetailsComponent detailsComponent = BaseApplication.get(this).createDetailsComponent();
+        //WordDetailsComponent detailsComponent = BaseApplication.get(this).createDetailsComponent();
 
-        wordDetailsViewModel = ViewModelProviders.of(this).get(WordDetailsViewModel.class);
-        detailsComponent.injectWordViewModel(wordDetailsViewModel);
+        wordDetailsViewModel = ViewModelProviders.of(this,factory).get(WordDetailsViewModel.class);
+        //detailsComponent.injectWordViewModel(wordDetailsViewModel);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setWordModel(wordDetailsViewModel);
@@ -93,6 +100,16 @@ public class SearchActivity extends AppCompatActivity {
 
         MenuItem favorites=menu.findItem(R.id.action_favorites);
         favorites.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent=new Intent(SearchActivity.this, FavoritesActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        MenuItem recents=menu.findItem(R.id.action_recents);
+        recents.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent=new Intent(SearchActivity.this, FavoritesActivity.class);
@@ -150,9 +167,5 @@ public class SearchActivity extends AppCompatActivity {
         super.onStop();
         wordDetailsViewModel.dispose();
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        BaseApplication.get(this).releaseDetailsComponent();
-    }
+
 }

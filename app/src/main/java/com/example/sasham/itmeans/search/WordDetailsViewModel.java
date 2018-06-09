@@ -1,9 +1,11 @@
 package com.example.sasham.itmeans.search;
 
 import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.sasham.itmeans.data.network.Meaning;
@@ -29,7 +31,6 @@ public class WordDetailsViewModel extends ViewModel {
 
     public static final String TAG = WordDetailsViewModel.class.getSimpleName();
 
-    @Inject
     public WordDetailsInteractor detailsInteractor;
 
     private ObservableField<WordDefinition> definition = new ObservableField<>();
@@ -38,6 +39,10 @@ public class WordDetailsViewModel extends ViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ObservableField<Status> status = new ObservableField<>();
     private ObservableBoolean isFavoriteWord = new ObservableBoolean();
+
+    public WordDetailsViewModel(WordDetailsInteractor detailsInteractor) {
+        this.detailsInteractor = detailsInteractor;
+    }
 
     private final Observable.OnPropertyChangedCallback checkIfFavoriteCallback = new Observable.OnPropertyChangedCallback() {
         @Override
@@ -181,5 +186,20 @@ public class WordDetailsViewModel extends ViewModel {
 
     public void dispose() {
         compositeDisposable.clear();
+    }
+
+    static class Factory implements ViewModelProvider.Factory{
+
+        private WordDetailsInteractor wordDetailsInteractor;
+
+        public Factory(WordDetailsInteractor wordDetailsInteractor) {
+            this.wordDetailsInteractor = wordDetailsInteractor;
+        }
+
+        @NonNull
+        @Override
+        public WordDetailsViewModel create(@NonNull Class modelClass) {
+            return new WordDetailsViewModel(wordDetailsInteractor);
+        }
     }
 }

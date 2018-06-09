@@ -3,21 +3,18 @@ package com.example.sasham.itmeans;
 import android.app.Activity;
 import android.app.Application;
 
-import com.example.sasham.itmeans.data.network.ApiModule;
-import com.example.sasham.itmeans.data.network.db.RealmModule;
-import com.example.sasham.itmeans.favorites.FavoritesComponent;
-import com.example.sasham.itmeans.favorites.FavoritesModule;
-import com.example.sasham.itmeans.search.WordDetailsComponent;
-import com.example.sasham.itmeans.search.WordDetailsModule;
+import javax.inject.Inject;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 import io.realm.Realm;
 
 
-public class BaseApplication extends Application {
+public class BaseApplication extends Application implements HasActivityInjector {
 
-    private AppComponent appComponent;
-    private WordDetailsComponent detailsComponent;
-    private FavoritesComponent favoritesComponent;
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     public static BaseApplication get(Activity activity) {
         return (BaseApplication) activity.getApplication();
@@ -26,8 +23,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        appComponent = createAppComponent();
+        injectApp();
         initRealm();
     }
 
@@ -35,39 +31,16 @@ public class BaseApplication extends Application {
         Realm.init(this);
     }
 
-    private AppComponent createAppComponent() {
-        return DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .apiModule(new ApiModule())
-                .realmModule(new RealmModule())
-                .build();
+    private void injectApp() {
+        DaggerAppComponent.builder()
+                .context(this)
+                .build()
+                .injectApp(this);
+
     }
 
-    public WordDetailsComponent createDetailsComponent() {
-        detailsComponent = appComponent
-                .wordDetailsBuilder()
-                .wordDetailsModule(new WordDetailsModule())
-                .build();
-        return detailsComponent;
-    }
-
-    public void releaseDetailsComponent() {
-        detailsComponent = null;
-    }
-
-    public FavoritesComponent createFavoritesComponent() {
-        favoritesComponent = appComponent
-                .favoritesBuilder()
-                .favoritesModule(new FavoritesModule())
-                .build();
-        return favoritesComponent;
-    }
-
-    public void releaseFavoritesComponent() {
-        detailsComponent = null;
-    }
-
-    public AppComponent getAppComponent() {
-        return appComponent;
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
     }
 }
