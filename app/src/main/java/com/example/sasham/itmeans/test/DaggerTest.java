@@ -9,15 +9,15 @@ import dagger.Module;
 import dagger.Provides;
 
 public class DaggerTest {
-    @Inject
-    public BindsTest bindsTest;
-
-    @Inject
-    public TestRepo testRepo;
-
-    @SashaQualifier
-    @Inject
-    public User user;
+//    @Inject
+//    public BindsTest bindsTest;
+//
+//    @Inject
+//    public TestRepo testRepo;
+//
+//    @SashaQualifier
+//    @Inject
+//    public User user;
 }
 
 

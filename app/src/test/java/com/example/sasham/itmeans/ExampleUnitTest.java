@@ -5,6 +5,7 @@ import com.example.sasham.itmeans.test.DaggerTest;
 import com.example.sasham.itmeans.test.DataComponent;
 import com.example.sasham.itmeans.test.DataModule;
 import com.example.sasham.itmeans.test.User;
+import com.example.sasham.itmeans.test.arch.UserActivity;
 
 import junit.framework.Assert;
 
@@ -27,8 +28,13 @@ public class ExampleUnitTest {
         daggerDataComponent.inject(daggerTest);
         // Assert.assertEquals(daggerTest.user.name, "Max");
 
-        Assert.assertNotNull(daggerTest.bindsTest);
-        Assert.assertEquals(daggerTest.testRepo.getNumb(), 5);
+//        Assert.assertNotNull(daggerTest.bindsTest);
+//        Assert.assertNotNull(daggerTest.testRepo.getUser());
+//        Assert.assertEquals(daggerTest.testRepo.getNumb(), 6);
+
+        UserActivity userActivity=new UserActivity();
+        Assert.assertNotNull(userActivity.testRepo);
+        Assert.assertEquals(userActivity.testRepo.getNumb(),8);
     }
 
 }

@@ -19,6 +19,7 @@ import dagger.Component;
 })
 public interface AppComponent {
 
-    WordDetailsComponent plus(WordDetailsModule wordDetailsModule);
-    FavoritesComponent plus(FavoritesModule favoritesModule);
+    WordDetailsComponent.Builder wordDetailsBuilder();
+
+    FavoritesComponent.Builder favoritesBuilder();
 }

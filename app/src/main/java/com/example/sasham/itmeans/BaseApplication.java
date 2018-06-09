@@ -44,7 +44,10 @@ public class BaseApplication extends Application {
     }
 
     public WordDetailsComponent createDetailsComponent() {
-        detailsComponent = appComponent.plus(new WordDetailsModule());
+        detailsComponent = appComponent
+                .wordDetailsBuilder()
+                .wordDetailsModule(new WordDetailsModule())
+                .build();
         return detailsComponent;
     }
 
@@ -53,7 +56,10 @@ public class BaseApplication extends Application {
     }
 
     public FavoritesComponent createFavoritesComponent() {
-        favoritesComponent = appComponent.plus(new FavoritesModule());
+        favoritesComponent = appComponent
+                .favoritesBuilder()
+                .favoritesModule(new FavoritesModule())
+                .build();
         return favoritesComponent;
     }
 

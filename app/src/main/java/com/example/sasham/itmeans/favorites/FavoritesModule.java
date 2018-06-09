@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
 
-@Module
+@Module()
 public class FavoritesModule {
 
     @FavoritesScope

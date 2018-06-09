@@ -21,6 +21,10 @@ public abstract class DataModule {
         return new User("Max");
     }
 
-    @Binds
-    public abstract TestRepo testRepo(TestRepoImp testRepoImp);
+    @Named("numb")
+    @Provides
+    static int numb(){return 6;}
+
+//    @Binds
+//    public abstract TestRepo testRepo(TestRepoImp testRepoImp);
 }
