@@ -2,6 +2,8 @@ package com.example.sasham.itmeans.data.network;
 
 import java.io.IOException;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Interceptor;
@@ -11,6 +13,7 @@ import okhttp3.Response;
 
 @Module
 public class OkHttpModule {
+    @Singleton
     @Provides
     public OkHttpClient okHttpClient(Interceptor interceptor) {
 
@@ -19,6 +22,7 @@ public class OkHttpModule {
                 .build();
     }
 
+    @Singleton
     @Provides
     public Interceptor interceptor() {
         Interceptor interceptor = new Interceptor() {

@@ -3,12 +3,15 @@ package com.example.sasham.itmeans;
 import android.app.Activity;
 import android.app.Application;
 
+import java.io.FileNotFoundException;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 public class BaseApplication extends Application implements HasActivityInjector {
@@ -29,6 +32,14 @@ public class BaseApplication extends Application implements HasActivityInjector 
 
     private void initRealm() {
         Realm.init(this);
+
+        RealmConfiguration configuration = new RealmConfiguration
+                .Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm.setDefaultConfiguration(configuration);
+
     }
 
     private void injectApp() {

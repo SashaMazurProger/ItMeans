@@ -4,6 +4,7 @@ package com.example.sasham.itmeans.search;
 import com.example.sasham.itmeans.data.network.WordAssociation;
 import com.example.sasham.itmeans.data.network.WordDefinition;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import io.reactivex.Observable;
 
@@ -16,6 +17,6 @@ public interface WordDetailsInteractor {
     Observable<WordDefinition> getWordDefinition(String word);
     void delete(FavoriteWord favoriteWord);
     void create(FavoriteWord favoriteWord);
+    void create(RecentWord recentWord);
     FavoriteWord findByName(String entry);
-
 }

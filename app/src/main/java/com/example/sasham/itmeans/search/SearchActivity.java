@@ -17,6 +17,7 @@ import com.example.sasham.itmeans.R;
 
 import com.example.sasham.itmeans.databinding.ActivitySearchBinding;
 import com.example.sasham.itmeans.favorites.FavoritesActivity;
+import com.example.sasham.itmeans.recents.RecentsActivity;
 import com.example.sasham.itmeans.util.RxUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -112,7 +113,7 @@ public class SearchActivity extends AppCompatActivity {
         recents.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent=new Intent(SearchActivity.this, FavoritesActivity.class);
+                Intent intent=new Intent(SearchActivity.this, RecentsActivity.class);
                 startActivity(intent);
                 return true;
             }

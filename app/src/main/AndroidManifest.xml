@@ -20,13 +20,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".test.arch.UserActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".favorites.FavoritesActivity"></activity>
+        <activity android:name=".favorites.FavoritesActivity" />
+        <activity android:name=".recents.RecentsActivity"></activity>
     </application>
 
 </manifest>

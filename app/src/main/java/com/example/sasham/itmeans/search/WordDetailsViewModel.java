@@ -12,6 +12,7 @@ import com.example.sasham.itmeans.data.network.Meaning;
 import com.example.sasham.itmeans.data.network.WordAssociation;
 import com.example.sasham.itmeans.data.network.WordDefinition;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import java.util.Date;
 
@@ -54,12 +55,14 @@ public class WordDetailsViewModel extends ViewModel {
                     } else {
                         isFavoriteWord.set(false);
                     }
+
                     break;
                 default:
                     isFavoriteWord.set(false);
             }
         }
     };
+
 
     public WordDetailsViewModel() {
         isFavoriteWord.set(false);
@@ -110,6 +113,7 @@ public class WordDetailsViewModel extends ViewModel {
                         if (value != null && value.getResultCode().equals("200")) {
                             meaning.set(value.getMeaning());
                             status.set(Status.SUCCESS);
+                            addRecentWord();
                         } else {
                             status.set(Status.ERROR);
                         }
@@ -173,7 +177,20 @@ public class WordDetailsViewModel extends ViewModel {
         }
     }
 
+    private void addRecentWord() {
+        if (definition.get() == null) return;
+
+        String word = definition.get().getEntry();
+        if ((word != null && !word.isEmpty())) {
+            Log.d(TAG, "addRecentWord: add");
+            RecentWord recentWord=new RecentWord(word,new Date().getTime());
+            detailsInteractor.create(recentWord);
+        }
+    }
+
     private boolean isFavorite() {
+        if (definition.get() == null) return false;
+
         String word = definition.get().getEntry();
         if ((word != null && !word.isEmpty())) {
             FavoriteWord searchFavoriteWord = detailsInteractor.findByName(word);
@@ -188,7 +205,7 @@ public class WordDetailsViewModel extends ViewModel {
         compositeDisposable.clear();
     }
 
-    static class Factory implements ViewModelProvider.Factory{
+    static class Factory implements ViewModelProvider.Factory {
 
         private WordDetailsInteractor wordDetailsInteractor;
 
