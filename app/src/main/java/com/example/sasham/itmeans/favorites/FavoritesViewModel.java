@@ -26,26 +26,13 @@ public class FavoritesViewModel extends ViewModel {
         favoritesInteractor.delete(favoriteWord);
     }
 
-//    private void createData() {
-//        Realm realm = Realm.getDefaultInstance();
-//        realm.beginTransaction();
-//        realm.copyToRealm(Arrays.asList(
-//                new FavoriteWord("School",new Date().getTime()),
-//                new FavoriteWord("Boo",new Date().getTime()),
-//                new FavoriteWord("Baa",new Date().getTime()),
-//                new FavoriteWord("Dad",new Date().getTime())
-//        ));
-//        realm.commitTransaction();
-//        realm.close();
-//    }
-//
-//    private void addData() {
-//        Realm realm = Realm.getDefaultInstance();
-//        RealmResults<FavoriteWord> words=realm.where(FavoriteWord.class).findAll();
-//        favoriteWords.clear();
-//        favoriteWords.addAll(words.subList(0,words.size()));
-//        realm.close();
-//    }
+    public void dispose(){
+        favoritesInteractor.dispose();
+    }
+
+    public void removeAllFavoriteWords() {
+        favoritesInteractor.removeAllFavoriteWords();
+    }
 
     static class Factory implements ViewModelProvider.Factory{
 

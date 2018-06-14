@@ -19,6 +19,7 @@ import com.example.sasham.itmeans.databinding.ActivitySearchBinding;
 import com.example.sasham.itmeans.favorites.FavoritesActivity;
 import com.example.sasham.itmeans.recents.RecentsActivity;
 import com.example.sasham.itmeans.util.RxUtils;
+import com.example.sasham.itmeans.util.TextUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,11 +52,7 @@ public class SearchActivity extends AppCompatActivity {
 //        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar_base);
 //        setSupportActionBar(toolbar);
 
-
-        //WordDetailsComponent detailsComponent = BaseApplication.get(this).createDetailsComponent();
-
-        wordDetailsViewModel = ViewModelProviders.of(this,factory).get(WordDetailsViewModel.class);
-        //detailsComponent.injectWordViewModel(wordDetailsViewModel);
+        wordDetailsViewModel = ViewModelProviders.of(this, factory).get(WordDetailsViewModel.class);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setWordModel(wordDetailsViewModel);
@@ -84,13 +81,13 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void checkIntentData() {
-        Intent intent=getIntent();
-        if(intent!=null){
-            String action=intent.getAction();
-            if(action.equals(SEARCH_WORD)){
-                String word=intent.getStringExtra(STRING_WORD_EXTRA);
-                if(word!=null&&!word.isEmpty())
-                wordDetailsViewModel.search(word);
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action.equals(SEARCH_WORD)) {
+                String word = intent.getStringExtra(STRING_WORD_EXTRA);
+                if (word != null && !word.isEmpty())
+                    wordDetailsViewModel.search(word);
             }
         }
     }
@@ -99,21 +96,21 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_main, menu);
 
-        MenuItem favorites=menu.findItem(R.id.action_favorites);
+        MenuItem favorites = menu.findItem(R.id.action_favorites);
         favorites.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent=new Intent(SearchActivity.this, FavoritesActivity.class);
+                Intent intent = new Intent(SearchActivity.this, FavoritesActivity.class);
                 startActivity(intent);
                 return true;
             }
         });
 
-        MenuItem recents=menu.findItem(R.id.action_recents);
+        MenuItem recents = menu.findItem(R.id.action_recents);
         recents.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent=new Intent(SearchActivity.this, RecentsActivity.class);
+                Intent intent = new Intent(SearchActivity.this, RecentsActivity.class);
                 startActivity(intent);
                 return true;
             }
@@ -122,24 +119,12 @@ public class SearchActivity extends AppCompatActivity {
         search = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
         RxUtils.textInputObservable(search)
-                .debounce(300, TimeUnit.MILLISECONDS)
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(String s) throws Exception {
-                        return !s.isEmpty();
-                    }
-                })
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .filter(word -> !TextUtils.isNotNullOrEmpty(word.trim()))
                 .distinctUntilChanged()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                               @Override
-                               public void accept(String s) throws Exception {
-                                   Log.d(TAG, "accept: ---");
-                                   wordDetailsViewModel.search(s);
-                               }
-                           }
-                );
+                .subscribe((word) -> wordDetailsViewModel.search(word), (e) -> onError());
 
         return true;
     }
@@ -166,7 +151,11 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        wordDetailsViewModel.dispose();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wordDetailsViewModel.dispose();
+    }
 }

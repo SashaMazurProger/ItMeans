@@ -4,9 +4,9 @@ import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import java.util.List;
 
-public interface RecentsView {
+public interface RecentsInteractor {
 
-    void showWords(List<RecentWord> words);
-    void onLoading();
-    void onLoaded();
+    List<RecentWord> getAllRecentWords();
+    void deleteAllRecentWords();
+    void destroy();
 }

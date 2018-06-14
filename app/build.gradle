@@ -10,6 +10,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        compileOptions.with {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
     }
     buildTypes {
         release {
@@ -21,7 +27,9 @@ android {
     dataBinding {
         enabled = true
     }
+
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -49,6 +57,7 @@ dependencies {
     // Dagger core
     annotationProcessor "com.google.dagger:dagger-compiler:2.16"
     implementation "com.google.dagger:dagger:2.16"
+    implementation 'com.google.dagger:dagger-producers:2.16'
 
     // Dagger Android
     annotationProcessor "com.google.dagger:dagger-android-processor:2.16"
@@ -59,3 +68,4 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
 
 }
+

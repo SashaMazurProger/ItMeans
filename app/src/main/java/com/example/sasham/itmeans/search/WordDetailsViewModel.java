@@ -16,13 +16,14 @@ import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import java.util.Date;
 
-import javax.inject.Inject;
-
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class WordDetailsViewModel extends ViewModel {
@@ -35,7 +36,7 @@ public class WordDetailsViewModel extends ViewModel {
     public WordDetailsInteractor detailsInteractor;
 
     private ObservableField<WordDefinition> definition = new ObservableField<>();
-    private ObservableField<Meaning> meaning = new ObservableField<>();
+//    private ObservableField<Meaning> meaning = new ObservableField<>();
     private ObservableField<WordAssociation> association = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ObservableField<Status> status = new ObservableField<>();
@@ -73,9 +74,9 @@ public class WordDetailsViewModel extends ViewModel {
         return isFavoriteWord;
     }
 
-    public ObservableField<Meaning> getMeaning() {
-        return meaning;
-    }
+//    public ObservableField<Meaning> getMeaning() {
+//        return meaning;
+//    }
 
     public ObservableField<WordDefinition> getDefinition() {
         return definition;
@@ -92,72 +93,53 @@ public class WordDetailsViewModel extends ViewModel {
     public void search(String word) {
         Log.d(TAG, "search: " + word);
 
-        detailsInteractor.getWordDefinition(word)
+        Disposable definitionDisposable = detailsInteractor.getWordDefinition(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        status.set(Status.LOADING);
-                    }
-                })
-                .subscribeWith(new Observer<WordDefinition>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
+                .doOnSubscribe((disposable -> status.set(Status.LOADING)))
+                .subscribe(this::onDefinitionFetchSuccess, this::onDefinitionFetchFailed);
 
-                    @Override
-                    public void onNext(WordDefinition value) {
-                        definition.set(value);
-                        if (value != null && value.getResultCode().equals("200")) {
-                            meaning.set(value.getMeaning());
-                            status.set(Status.SUCCESS);
-                            addRecentWord();
-                        } else {
-                            status.set(Status.ERROR);
-                        }
-                    }
+        compositeDisposable.add(definitionDisposable);
 
-                    @Override
-                    public void onError(Throwable e) {
-                        meaning.set(null);
-                        definition.set(null);
-                        status.set(Status.ERROR);
-                    }
+//        Disposable assocDisposable= detailsInteractor.getWordAssociation(word)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeWith(new Observer<WordAssociation>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        compositeDisposable.add(d);
+//                    }
+//
+//                    @Override
+//                    public void onNext(WordAssociation value) {
+//                        if (value != null) {
+//                            association.set(value);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        association.set(null);
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+    }
 
-                    @Override
-                    public void onComplete() {
+    private void onDefinitionFetchFailed(Throwable throwable) {
+//        meaning.set(null);
+        definition.set(null);
+        status.set(Status.ERROR);
+    }
 
-                    }
-                });
-
-        detailsInteractor.getWordAssociation(word)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new Observer<WordAssociation>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void onNext(WordAssociation value) {
-                        if (value != null) {
-                            association.set(value);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        association.set(null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    private void onDefinitionFetchSuccess(WordDefinition definition) {
+        Log.d(TAG, "onDefinitionFetchSuccess: d:"+definition.getMeaning().toString());
+        this.definition.set(definition);
+        status.set(Status.SUCCESS);
+        addRecentWord();
     }
 
     public void clickAddToFavorite() {
@@ -183,7 +165,7 @@ public class WordDetailsViewModel extends ViewModel {
         String word = definition.get().getEntry();
         if ((word != null && !word.isEmpty())) {
             Log.d(TAG, "addRecentWord: add");
-            RecentWord recentWord=new RecentWord(word,new Date().getTime());
+            RecentWord recentWord = new RecentWord(word, new Date().getTime());
             detailsInteractor.create(recentWord);
         }
     }
@@ -203,6 +185,7 @@ public class WordDetailsViewModel extends ViewModel {
 
     public void dispose() {
         compositeDisposable.clear();
+        detailsInteractor.dispose();
     }
 
     static class Factory implements ViewModelProvider.Factory {

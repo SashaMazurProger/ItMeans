@@ -27,5 +27,7 @@ public class RecentsActivity extends BaseActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.recents_container, new RecentsFragment())
                 .commit();
+
+//        setTitle(getString(R.string.));
     }
 }

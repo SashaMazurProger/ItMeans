@@ -19,4 +19,5 @@ public interface WordDetailsInteractor {
     void create(FavoriteWord favoriteWord);
     void create(RecentWord recentWord);
     FavoriteWord findByName(String entry);
+    void dispose();
 }

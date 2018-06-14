@@ -6,9 +6,15 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class WordDefinition implements Parcelable {
 
+public class WordDefinition extends RealmObject implements Parcelable {
+
+    public static final String ENTRY_FIELD = "entry";
+
+    @PrimaryKey
     @SerializedName("entry")
     @Expose
     private String entry;

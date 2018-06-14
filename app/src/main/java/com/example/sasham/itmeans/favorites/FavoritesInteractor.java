@@ -17,5 +17,6 @@ public abstract class FavoritesInteractor {
     abstract List<FavoriteWord> allFavoriteWords();
     abstract void delete(FavoriteWord favoriteWord);
     abstract void create(FavoriteWord favoriteWord);
-    public interface OnChangeListener{}
+    abstract void dispose();
+    abstract void removeAllFavoriteWords();
 }

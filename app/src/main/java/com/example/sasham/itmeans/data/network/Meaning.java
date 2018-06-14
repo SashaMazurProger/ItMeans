@@ -6,11 +6,13 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Sasha M on 15.04.2018.
  */
 
-public class Meaning implements Parcelable
+public class Meaning extends RealmObject implements Parcelable
 {
 
     @SerializedName("noun")

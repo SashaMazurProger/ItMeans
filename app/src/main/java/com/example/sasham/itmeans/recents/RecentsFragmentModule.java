@@ -13,4 +13,8 @@ public interface RecentsFragmentModule {
     @RecentsFragmentScope
     @Binds
     RecentsPresenter recentsPresenter(RecentsPresenterImp recentsFragment);
+
+    @RecentsFragmentScope
+    @Binds
+    RecentsInteractor recentsInteractor(RecentsInteractorImp recentsInteractor);
 }

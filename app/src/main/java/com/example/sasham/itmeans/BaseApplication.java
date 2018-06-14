@@ -26,6 +26,7 @@ public class BaseApplication extends Application implements HasActivityInjector 
     @Override
     public void onCreate() {
         super.onCreate();
+
         injectApp();
         initRealm();
     }

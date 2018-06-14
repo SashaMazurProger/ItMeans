@@ -37,7 +37,7 @@
                 android:id="@+id/entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{wordModel.definition.get().entry}" />
+                android:text="@{wordModel.definition.entry}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:id="@+id/definition_verb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{wordModel.meaning.get().verb}" />
+                android:text="@{wordModel.definition.meaning.verb}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
                 android:id="@+id/definition_noun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{wordModel.meaning.get().noun}" />
+                android:text="@{wordModel.definition.meaning.noun}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 android:id="@+id/association_words"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{wordModel.association.get().assocWord.toString()}" />
+                android:text="@{wordModel.association.assocWord.toString()}" />
         </LinearLayout>
 
         <TextView

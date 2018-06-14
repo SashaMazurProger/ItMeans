@@ -11,4 +11,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_delete_all">Delete All</string>
+    <string name="favorites_activity_title">Favorites</string>
+    <string name="warning_title">Warning</string>
+    <string name="delete_all_favorites_words_message">Do you really want clear all favorites words?</string>
+    <string name="answer_yes">Yes</string>
+    <string name="answer_no">No</string>
 </resources>

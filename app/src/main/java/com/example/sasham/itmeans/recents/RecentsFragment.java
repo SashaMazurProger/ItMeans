@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.sasham.itmeans.BR;
 import com.example.sasham.itmeans.R;
@@ -58,6 +57,8 @@ public class RecentsFragment extends Fragment implements RecentsView {
         unbinder = ButterKnife.bind(this, rootView);
 
         initRecentsList();
+
+        //Load words
         recentsPresenter.fetchWords();
 
         return rootView;
@@ -76,11 +77,21 @@ public class RecentsFragment extends Fragment implements RecentsView {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        recentsPresenter.onDestroy();
+        recentsPresenter.destroy();
     }
 
     @Override
     public void showWords(List<RecentWord> words) {
         recentsAdapter.setItems(words);
+    }
+
+    @Override
+    public void onLoading() {
+
+    }
+
+    @Override
+    public void onLoaded() {
+
     }
 }

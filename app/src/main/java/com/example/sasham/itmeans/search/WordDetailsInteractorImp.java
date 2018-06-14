@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class WordDetailsInteractorImp implements WordDetailsInteractor {
     private static final String TAG = WordDetailsInteractorImp.class.getSimpleName();
@@ -28,12 +29,26 @@ public class WordDetailsInteractorImp implements WordDetailsInteractor {
     @Override
     public Observable<WordAssociation> getWordAssociation(final String word) {
         return twinWordApi.getWordAssociation(word);
-
     }
 
     @Override
-    public Observable<WordDefinition> getWordDefinition(String word) {
-        return twinWordApi.getWordDefinition(word);
+    public Observable<WordDefinition> getWordDefinition(final String word) {
+        return twinWordApi.getWordDefinition(word)
+                .flatMap(definition -> {
+
+                    realm.executeTransaction(r ->
+                            r.insert(definition));
+
+                    return Observable.just(definition);
+                })
+                .onErrorResumeNext(throwable -> {
+                    WordDefinition definition=realm
+                            .where(WordDefinition.class)
+                            .equalTo(WordDefinition.ENTRY_FIELD,word)
+                            .findFirst();
+
+                    return Observable.just(definition);
+                });
     }
 
     @Override
@@ -70,65 +85,43 @@ public class WordDetailsInteractorImp implements WordDetailsInteractor {
                 .findFirst();
 
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Activity implements Adapter.CallBack{
-
-//    new Adapter(this);
-    //...
 
     @Override
-    public void onDeleteItem() {
-        //Берём с БД данніе и передаём
+    public void dispose() {
+        realm.close();
     }
 }
 
-class Adapter{
-    CallBack callBack;
 
-    public Adapter(CallBack callBack) {
-        this.callBack = callBack;
-    }
 
-    //...
-    //Delete Dialog
-    //Yes -> callback.onDeleteItem();
 
-    interface CallBack{
-        void onDeleteItem();
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

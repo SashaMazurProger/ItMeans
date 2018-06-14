@@ -5,6 +5,7 @@ import com.example.sasham.itmeans.data.network.TwinWordApi;
 import com.example.sasham.itmeans.data.network.WordAssociation;
 import com.example.sasham.itmeans.data.network.WordDefinition;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class FavoritesInteractorImp extends FavoritesInteractor {
 
     @Override
     List<FavoriteWord> allFavoriteWords() {
-        return realm.where(FavoriteWord.class).findAll().sort("timeStamp", Sort.DESCENDING);
+        return realm.where(FavoriteWord.class).findAll().sort(FavoriteWord.TIME_STAMP_FIELD, Sort.DESCENDING);
     }
 
     @Override
@@ -36,6 +37,20 @@ public class FavoritesInteractorImp extends FavoritesInteractor {
     void create(FavoriteWord favoriteWord) {
         if (!favoriteWord.isManaged()) {
             realm.copyToRealm(favoriteWord);
+        }
+    }
+
+    @Override
+    void dispose() {
+        realm.close();
+    }
+
+    @Override
+    void removeAllFavoriteWords() {
+        if (realm.where(FavoriteWord.class).count() > 0) {
+            realm.beginTransaction();
+            realm.delete(FavoriteWord.class);
+            realm.commitTransaction();
         }
     }
 }
