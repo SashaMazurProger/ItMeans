@@ -1,5 +1,7 @@
 package com.example.sasham.itmeans;
 
+import com.example.sasham.itmeans.data.network.ApiModule;
+import com.example.sasham.itmeans.search.WordDetailsInteractorImp;
 import com.example.sasham.itmeans.test.DaggerDataComponent;
 import com.example.sasham.itmeans.test.DaggerTest;
 import com.example.sasham.itmeans.test.DataComponent;
@@ -14,12 +16,20 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    @Inject
+    WordDetailsInteractorImp detailsInteractorImp;
+
     @Test
     public void adapterTest() throws Exception {
 
@@ -39,7 +49,8 @@ public class ExampleUnitTest {
 //        Assert.assertNotNull(userActivity.testRepo);
 //        Assert.assertEquals(userActivity.testRepo.getNumb(),8);
 
-
+//     new ApiModule().twinWordApi().getWordDefinition("mask")
+//             .subscribe((definition -> Assert.fail(definition.toString())), (throwable -> Assert.fail(throwable.toString())));
     }
 
 //    @Test

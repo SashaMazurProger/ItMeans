@@ -2,81 +2,48 @@ package com.example.sasham.itmeans.search;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
-import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.sasham.itmeans.data.network.Meaning;
 import com.example.sasham.itmeans.data.network.WordAssociation;
 import com.example.sasham.itmeans.data.network.WordDefinition;
 import com.example.sasham.itmeans.data.network.db.FavoriteWord;
 import com.example.sasham.itmeans.data.network.db.RecentWord;
 
 import java.util.Date;
+import java.util.Observable;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class WordDetailsViewModel extends ViewModel {
-
-
-    public enum Status {LOADING, SUCCESS, ERROR}
 
     public static final String TAG = WordDetailsViewModel.class.getSimpleName();
 
     public WordDetailsInteractor detailsInteractor;
 
     private ObservableField<WordDefinition> definition = new ObservableField<>();
-//    private ObservableField<Meaning> meaning = new ObservableField<>();
     private ObservableField<WordAssociation> association = new ObservableField<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private ObservableField<Status> status = new ObservableField<>();
-    private ObservableBoolean isFavoriteWord = new ObservableBoolean();
+    private ObservableBoolean isLoading = new ObservableBoolean(false);
+    private ObservableBoolean isSuccess = new ObservableBoolean(false);
+    private ObservableBoolean isFavoriteWord = new ObservableBoolean(false);
 
     public WordDetailsViewModel(WordDetailsInteractor detailsInteractor) {
         this.detailsInteractor = detailsInteractor;
     }
 
-    private final Observable.OnPropertyChangedCallback checkIfFavoriteCallback = new Observable.OnPropertyChangedCallback() {
-        @Override
-        public void onPropertyChanged(Observable sender, int propertyId) {
-            switch (getStatus().get()) {
-                case SUCCESS:
-                    if (isFavorite()) {
-                        isFavoriteWord.set(true);
-                    } else {
-                        isFavoriteWord.set(false);
-                    }
-
-                    break;
-                default:
-                    isFavoriteWord.set(false);
-            }
-        }
-    };
-
 
     public WordDetailsViewModel() {
-        isFavoriteWord.set(false);
-        status.addOnPropertyChangedCallback(checkIfFavoriteCallback);
     }
 
     public ObservableBoolean getIsFavoriteWord() {
         return isFavoriteWord;
     }
-
-//    public ObservableField<Meaning> getMeaning() {
-//        return meaning;
-//    }
 
     public ObservableField<WordDefinition> getDefinition() {
         return definition;
@@ -86,8 +53,12 @@ public class WordDetailsViewModel extends ViewModel {
         return association;
     }
 
-    public ObservableField<Status> getStatus() {
-        return status;
+    public ObservableBoolean getIsSuccess() {
+        return isSuccess;
+    }
+
+    public ObservableBoolean getIsLoading() {
+        return isLoading;
     }
 
     public void search(String word) {
@@ -96,49 +67,37 @@ public class WordDetailsViewModel extends ViewModel {
         Disposable definitionDisposable = detailsInteractor.getWordDefinition(word)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe((disposable -> status.set(Status.LOADING)))
+                .doOnSubscribe((disposable -> isLoading.set(true)))
                 .subscribe(this::onDefinitionFetchSuccess, this::onDefinitionFetchFailed);
 
         compositeDisposable.add(definitionDisposable);
 
-//        Disposable assocDisposable= detailsInteractor.getWordAssociation(word)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new Observer<WordAssociation>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        compositeDisposable.add(d);
-//                    }
-//
-//                    @Override
-//                    public void onNext(WordAssociation value) {
-//                        if (value != null) {
-//                            association.set(value);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        association.set(null);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+        Disposable assocDisposable = detailsInteractor.getWordAssociation(word)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((wordAssociation -> association.set(wordAssociation)),
+                        (throwable -> association.set(null)));
+
+        compositeDisposable.add(assocDisposable);
     }
 
     private void onDefinitionFetchFailed(Throwable throwable) {
-//        meaning.set(null);
+        Log.e(TAG, "onDefinitionFetchFailed: e", throwable);
         definition.set(null);
-        status.set(Status.ERROR);
+        isLoading.set(false);
+        isSuccess.set(false);
     }
 
     private void onDefinitionFetchSuccess(WordDefinition definition) {
-        Log.d(TAG, "onDefinitionFetchSuccess: d:"+definition.getMeaning().toString());
+        Log.d(TAG, "onDefinitionFetchSuccess: d:" + definition.getMeaning().toString());
         this.definition.set(definition);
-        status.set(Status.SUCCESS);
+        isLoading.set(false);
+        isSuccess.set(true);
+        if (isFavorite()) {
+            isFavoriteWord.set(true);
+        } else {
+            isFavoriteWord.set(false);
+        }
         addRecentWord();
     }
 

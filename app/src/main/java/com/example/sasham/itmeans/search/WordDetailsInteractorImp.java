@@ -13,6 +13,7 @@ import com.example.sasham.itmeans.data.network.db.RecentWord;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -28,12 +29,29 @@ public class WordDetailsInteractorImp implements WordDetailsInteractor {
 
     @Override
     public Observable<WordAssociation> getWordAssociation(final String word) {
-        return twinWordApi.getWordAssociation(word);
+        return twinWordApi.getWordAssociation(word)
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(association -> {
+
+                    realm.executeTransaction(r ->
+                            r.insert(association));
+
+                    return Observable.just(association);
+                })
+                .onErrorResumeNext(throwable -> {
+                    WordAssociation association = realm
+                            .where(WordAssociation.class)
+                            .equalTo(WordAssociation.ENTRY_FIELD, word)
+                            .findFirst();
+
+                    return Observable.just(association);
+                });
     }
 
     @Override
     public Observable<WordDefinition> getWordDefinition(final String word) {
         return twinWordApi.getWordDefinition(word)
+                .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(definition -> {
 
                     realm.executeTransaction(r ->
@@ -42,9 +60,9 @@ public class WordDetailsInteractorImp implements WordDetailsInteractor {
                     return Observable.just(definition);
                 })
                 .onErrorResumeNext(throwable -> {
-                    WordDefinition definition=realm
+                    WordDefinition definition = realm
                             .where(WordDefinition.class)
-                            .equalTo(WordDefinition.ENTRY_FIELD,word)
+                            .equalTo(WordDefinition.ENTRY_FIELD, word)
                             .findFirst();
 
                     return Observable.just(definition);

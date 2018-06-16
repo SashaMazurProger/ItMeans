@@ -56,25 +56,25 @@ public class SearchActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setWordModel(wordDetailsViewModel);
-        wordDetailsViewModel.getStatus()
-                .addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-                    @Override
-                    public void onPropertyChanged(Observable sender, int propertyId) {
-                        switch (wordDetailsViewModel.getStatus().get()) {
-                            case LOADING:
-                                onLoading();
-                                break;
-                            case SUCCESS:
-                                onSuccess();
-                                break;
-                            case ERROR:
-                                onError();
-                                break;
-                            default:
-                                onError();
-                        }
-                    }
-                });
+//        wordDetailsViewModel.getStatus()
+//                .addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+//                    @Override
+//                    public void onPropertyChanged(Observable sender, int propertyId) {
+//                        switch (wordDetailsViewModel.getStatus().get()) {
+//                            case LOADING:
+//                                onLoading();
+//                                break;
+//                            case SUCCESS:
+//                                onSuccess();
+//                                break;
+//                            case ERROR:
+//                                onError();
+//                                break;
+//                            default:
+//                                onError();
+//                        }
+//                    }
+//                });
 
         onError();
         checkIntentData();

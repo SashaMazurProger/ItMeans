@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="wordModel"
             type="com.example.sasham.itmeans.search.WordDetailsViewModel" />
@@ -19,15 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="@{!wordModel.isSuccess ? View.GONE : View.VISIBLE}">
 
             <ImageButton
                 android:id="@+id/add_favorite"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_add_favorite"
-                android:backgroundTint="@{wordModel.isFavoriteWord.get()?@color/colorAccent:@android:color/transparent}"
-                android:onClick="@{()->wordModel.clickAddToFavorite()}"/>
+                android:backgroundTint="@{wordModel.isFavoriteWord ? @color/colorAccent:@android:color/transparent}"
+                android:onClick="@{()->wordModel.clickAddToFavorite()}"
+                android:src="@drawable/ic_add_favorite" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,13 +82,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/not_found" />
+            android:text="@string/not_found"
+            android:visibility="@{wordModel.isSuccess ? View.GONE : View.VISIBLE}" />
 
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:visibility="@{wordModel.isLoading ? View.VISIBLE : View.GONE }" />
     </RelativeLayout>
 
 </layout>
