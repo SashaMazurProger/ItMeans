@@ -1,14 +1,18 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
+
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
-public class WordReference implements Parcelable {
+
+public class WordTheme extends RealmObject implements Parcelable {
 
     @SerializedName("entry")
     @Expose
@@ -19,9 +23,9 @@ public class WordReference implements Parcelable {
     @SerializedName("response")
     @Expose
     private String response;
-    @SerializedName("relation")
+    @SerializedName("theme")
     @Expose
-    private Relation relation;
+    private RealmList<String> theme = null;
     @SerializedName("version")
     @Expose
     private String version;
@@ -37,27 +41,27 @@ public class WordReference implements Parcelable {
     @SerializedName("result_msg")
     @Expose
     private String resultMsg;
-    public final static Parcelable.Creator<WordReference> CREATOR = new Creator<WordReference>() {
+    public final static Parcelable.Creator<WordTheme> CREATOR = new Creator<WordTheme>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public WordReference createFromParcel(Parcel in) {
-            return new WordReference(in);
+        public WordTheme createFromParcel(Parcel in) {
+            return new WordTheme(in);
         }
 
-        public WordReference[] newArray(int size) {
-            return (new WordReference[size]);
+        public WordTheme[] newArray(int size) {
+            return (new WordTheme[size]);
         }
 
     };
 
-    protected WordReference(Parcel in) {
+    protected WordTheme(Parcel in) {
         this.entry = ((String) in.readValue((String.class.getClassLoader())));
         this.request = ((String) in.readValue((String.class.getClassLoader())));
         this.response = ((String) in.readValue((String.class.getClassLoader())));
-        this.relation = ((Relation) in.readValue((Relation.class.getClassLoader())));
+        in.readList(this.theme, (java.lang.String.class.getClassLoader()));
         this.version = ((String) in.readValue((String.class.getClassLoader())));
         this.author = ((String) in.readValue((String.class.getClassLoader())));
         this.email = ((String) in.readValue((String.class.getClassLoader())));
@@ -65,7 +69,7 @@ public class WordReference implements Parcelable {
         this.resultMsg = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public WordReference() {
+    public WordTheme() {
     }
 
     public String getEntry() {
@@ -92,12 +96,12 @@ public class WordReference implements Parcelable {
         this.response = response;
     }
 
-    public Relation getRelation() {
-        return relation;
+    public List<String> getTheme() {
+        return theme;
     }
 
-    public void setRelation(Relation relation) {
-        this.relation = relation;
+    public void setTheme(List<String> theme) {
+        this.theme = (RealmList<String>) theme;
     }
 
     public String getVersion() {
@@ -140,11 +144,12 @@ public class WordReference implements Parcelable {
         this.resultMsg = resultMsg;
     }
 
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(entry);
         dest.writeValue(request);
         dest.writeValue(response);
-        dest.writeValue(relation);
+        dest.writeList(theme);
         dest.writeValue(version);
         dest.writeValue(author);
         dest.writeValue(email);

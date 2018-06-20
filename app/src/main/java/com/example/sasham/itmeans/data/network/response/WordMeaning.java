@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +12,7 @@ import io.realm.RealmObject;
  * Created by Sasha M on 15.04.2018.
  */
 
-public class Meaning extends RealmObject implements Parcelable
+public class WordMeaning extends RealmObject implements Parcelable
 {
 
     @SerializedName("noun")
@@ -27,31 +27,31 @@ public class Meaning extends RealmObject implements Parcelable
     @SerializedName("adjective")
     @Expose
     private String adjective;
-    public final static Parcelable.Creator<Meaning> CREATOR = new Creator<Meaning>() {
+    public final static Parcelable.Creator<WordMeaning> CREATOR = new Creator<WordMeaning>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public Meaning createFromParcel(Parcel in) {
-            return new Meaning(in);
+        public WordMeaning createFromParcel(Parcel in) {
+            return new WordMeaning(in);
         }
 
-        public Meaning[] newArray(int size) {
-            return (new Meaning[size]);
+        public WordMeaning[] newArray(int size) {
+            return (new WordMeaning[size]);
         }
 
     }
             ;
 
-    protected Meaning(Parcel in) {
+    protected WordMeaning(Parcel in) {
         this.noun = ((String) in.readValue((String.class.getClassLoader())));
         this.verb = ((String) in.readValue((String.class.getClassLoader())));
         this.adverb = ((String) in.readValue((String.class.getClassLoader())));
         this.adjective = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public Meaning() {
+    public WordMeaning() {
     }
 
     public String getNoun() {

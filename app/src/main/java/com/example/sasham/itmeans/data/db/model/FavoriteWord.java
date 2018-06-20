@@ -1,17 +1,20 @@
-package com.example.sasham.itmeans.data.network.db;
+package com.example.sasham.itmeans.data.db.model;
+
+import java.io.Serializable;
 
 import io.realm.RealmObject;
 
-public class RecentWord extends RealmObject{
+public class FavoriteWord extends RealmObject{
+
     public static final String TIME_STAMP_FIELD = "timeStamp";
     public static final String ENTRY_FIELD = "entry";
     private String entry;
     private long timeStamp;
 
-    public RecentWord() {
+    public FavoriteWord() {
     }
 
-    public RecentWord(String entry, long timeStamp) {
+    public FavoriteWord(String entry, long timeStamp) {
         this.entry = entry;
         this.timeStamp = timeStamp;
     }

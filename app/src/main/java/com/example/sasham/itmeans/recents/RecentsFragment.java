@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.example.sasham.itmeans.BR;
 import com.example.sasham.itmeans.R;
 import com.example.sasham.itmeans.adapter.BaseRecyclerAdapter;
-import com.example.sasham.itmeans.data.network.db.RecentWord;
+import com.example.sasham.itmeans.data.db.model.RecentWord;
 
 import java.util.List;
 

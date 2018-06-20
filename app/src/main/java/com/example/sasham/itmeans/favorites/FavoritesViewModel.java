@@ -4,11 +4,9 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.example.sasham.itmeans.data.network.db.FavoriteWord;
+import com.example.sasham.itmeans.data.db.model.FavoriteWord;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 public class FavoritesViewModel extends ViewModel {
 

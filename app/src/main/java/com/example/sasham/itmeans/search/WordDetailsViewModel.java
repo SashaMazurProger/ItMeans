@@ -7,13 +7,13 @@ import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.sasham.itmeans.data.network.WordAssociation;
-import com.example.sasham.itmeans.data.network.WordDefinition;
-import com.example.sasham.itmeans.data.network.db.FavoriteWord;
-import com.example.sasham.itmeans.data.network.db.RecentWord;
+import com.example.sasham.itmeans.data.network.response.WordAssociation;
+import com.example.sasham.itmeans.data.network.response.WordDefinition;
+import com.example.sasham.itmeans.data.db.model.FavoriteWord;
+import com.example.sasham.itmeans.data.db.model.RecentWord;
+import com.example.sasham.itmeans.data.network.response.WordExample;
 
 import java.util.Date;
-import java.util.Observable;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,6 +32,8 @@ public class WordDetailsViewModel extends ViewModel {
     private ObservableBoolean isLoading = new ObservableBoolean(false);
     private ObservableBoolean isSuccess = new ObservableBoolean(false);
     private ObservableBoolean isFavoriteWord = new ObservableBoolean(false);
+    private ObservableField<WordExample> example = new ObservableField<>();
+
 
     public WordDetailsViewModel(WordDetailsInteractor detailsInteractor) {
         this.detailsInteractor = detailsInteractor;
@@ -39,6 +41,10 @@ public class WordDetailsViewModel extends ViewModel {
 
 
     public WordDetailsViewModel() {
+    }
+
+    public ObservableField<WordExample> getExample() {
+        return example;
     }
 
     public ObservableBoolean getIsFavoriteWord() {
@@ -79,6 +85,14 @@ public class WordDetailsViewModel extends ViewModel {
                         (throwable -> association.set(null)));
 
         compositeDisposable.add(assocDisposable);
+
+        Disposable exampleDisposable = detailsInteractor.getWordExample(word)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((wordExample -> example.set(wordExample)),
+                        (throwable -> example.set(null)));
+
+        compositeDisposable.add(exampleDisposable);
     }
 
     private void onDefinitionFetchFailed(Throwable throwable) {

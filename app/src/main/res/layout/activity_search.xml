@@ -74,7 +74,13 @@
                 android:id="@+id/association_words"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{wordModel.association.assocWord.toString()}" />
+                android:text="@{ wordModel.association.assocWord.toString()}" />
+
+            <TextView
+                android:id="@+id/examples"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{ wordModel.example.example.toString()}" />
         </LinearLayout>
 
         <TextView

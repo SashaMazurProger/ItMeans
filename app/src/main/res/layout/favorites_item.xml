@@ -6,7 +6,7 @@
 
         <variable
             name="favorite"
-            type="com.example.sasham.itmeans.data.network.db.FavoriteWord" />
+            type="com.example.sasham.itmeans.data.db.model.FavoriteWord" />
     </data>
 
     <RelativeLayout

@@ -1,30 +1,33 @@
 package com.example.sasham.itmeans.search;
 
 
-import android.view.View;
-import android.widget.ListView;
-
-import com.example.sasham.itmeans.data.network.WordAssociation;
-import com.example.sasham.itmeans.data.network.WordDefinition;
+import com.example.sasham.itmeans.Constants;
+import com.example.sasham.itmeans.data.DataRepository;
+import com.example.sasham.itmeans.data.network.response.WordAssociation;
+import com.example.sasham.itmeans.data.network.response.WordDefinition;
 import com.example.sasham.itmeans.data.network.TwinWordApi;
-import com.example.sasham.itmeans.data.network.db.FavoriteWord;
-import com.example.sasham.itmeans.data.network.db.RecentWord;
-
-import javax.inject.Inject;
+import com.example.sasham.itmeans.data.db.model.FavoriteWord;
+import com.example.sasham.itmeans.data.db.model.RecentWord;
+import com.example.sasham.itmeans.data.network.response.WordExample;
+import com.example.sasham.itmeans.data.network.response.WordReference;
+import com.example.sasham.itmeans.data.network.response.WordTheme;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class WordDetailsInteractorImp implements WordDetailsInteractor {
     private static final String TAG = WordDetailsInteractorImp.class.getSimpleName();
     private final TwinWordApi twinWordApi;
     private Realm realm;
+    private DataRepository dataRepository;
 
-    public WordDetailsInteractorImp(TwinWordApi twinWordApi, Realm realm) {
+    public WordDetailsInteractorImp(TwinWordApi twinWordApi, Realm realm, DataRepository dataRepository) {
         this.twinWordApi = twinWordApi;
         this.realm = realm;
+        this.dataRepository = dataRepository;
     }
 
     @Override
@@ -41,32 +44,67 @@ public class WordDetailsInteractorImp implements WordDetailsInteractor {
                 .onErrorResumeNext(throwable -> {
                     WordAssociation association = realm
                             .where(WordAssociation.class)
-                            .equalTo(WordAssociation.ENTRY_FIELD, word)
-                            .findFirst();
+                            .equalTo(Constants.WORD_ENTRY_FIELD, word)
+                            .findFirstAsync();
 
                     return Observable.just(association);
                 });
+
     }
 
     @Override
     public Observable<WordDefinition> getWordDefinition(final String word) {
-        return twinWordApi.getWordDefinition(word)
+//        return twinWordApi.getWordDefinition(word)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap(definition -> {
+//
+//                    realm.executeTransaction(r ->
+//                            r.insert(definition));
+//
+//                    return Observable.just(definition);
+//                })
+//                .onErrorResumeNext(throwable -> {
+//                    WordDefinition definition = realm
+//                            .where(WordDefinition.class)
+//                            .equalTo(Constants.WORD_ENTRY_FIELD, word)
+//                            .findFirst();
+//
+//                    return Observable.just(definition);
+//                });
+        return dataRepository.getWordDefinition(word);
+    }
+
+    @Override
+    public Observable<WordExample> getWordExample(String word) {
+        return twinWordApi.getWordExample(word)
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(definition -> {
-
+                .flatMap((wordExample -> {
                     realm.executeTransaction(r ->
-                            r.insert(definition));
+                            r.insert(wordExample));
 
-                    return Observable.just(definition);
-                })
-                .onErrorResumeNext(throwable -> {
-                    WordDefinition definition = realm
-                            .where(WordDefinition.class)
-                            .equalTo(WordDefinition.ENTRY_FIELD, word)
-                            .findFirst();
+                    return Observable.just(wordExample);
+                }))
+                .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends WordExample>>() {
+                    @Override
+                    public ObservableSource<? extends WordExample> apply(Throwable throwable) throws Exception {
+                        WordExample example = realm
+                                .where(WordExample.class)
+                                .equalTo(Constants.WORD_ENTRY_FIELD, word)
+                                .findFirst();
 
-                    return Observable.just(definition);
+                        return Observable.just(example);
+                    }
                 });
+    }
+
+    @Override
+    public Observable<WordReference> getWordReference(String word) {
+        return null;
+    }
+
+    @Override
+    public Observable<WordTheme> getWordTheme(String word) {
+        return null;
     }
 
     @Override

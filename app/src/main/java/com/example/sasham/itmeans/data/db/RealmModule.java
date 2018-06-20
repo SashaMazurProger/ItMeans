@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network.db;
+package com.example.sasham.itmeans.data.db;
 
 import javax.inject.Singleton;
 

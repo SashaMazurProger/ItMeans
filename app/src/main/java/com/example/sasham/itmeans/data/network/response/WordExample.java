@@ -1,16 +1,18 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
 
 import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
-public class WordExample implements Parcelable {
+
+public class WordExample extends RealmObject implements Parcelable {
 
     @SerializedName("entry")
     @Expose
@@ -23,7 +25,7 @@ public class WordExample implements Parcelable {
     private String response;
     @SerializedName("example")
     @Expose
-    private List<String> example = null;
+    private RealmList<String> example = null;
     @SerializedName("version")
     @Expose
     private String version;
@@ -99,7 +101,7 @@ public class WordExample implements Parcelable {
     }
 
     public void setExample(List<String> example) {
-        this.example = example;
+        this.example = (RealmList<String>) example;
     }
 
     public String getVersion() {

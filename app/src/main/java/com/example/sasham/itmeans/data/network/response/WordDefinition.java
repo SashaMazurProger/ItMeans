@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,7 +12,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class WordDefinition extends RealmObject implements Parcelable {
 
-    public static final String ENTRY_FIELD = "entry";
 
     @PrimaryKey
     @SerializedName("entry")
@@ -26,7 +25,7 @@ public class WordDefinition extends RealmObject implements Parcelable {
     private String response;
     @SerializedName("meaning")
     @Expose
-    private Meaning meaning;
+    private WordMeaning meaning;
     @SerializedName("ipa")
     @Expose
     private String ipa;
@@ -65,7 +64,7 @@ public class WordDefinition extends RealmObject implements Parcelable {
         this.entry = ((String) in.readValue((String.class.getClassLoader())));
         this.request = ((String) in.readValue((String.class.getClassLoader())));
         this.response = ((String) in.readValue((String.class.getClassLoader())));
-        this.meaning = ((Meaning) in.readValue((Meaning.class.getClassLoader())));
+        this.meaning = ((WordMeaning) in.readValue((WordMeaning.class.getClassLoader())));
         this.ipa = ((String) in.readValue((String.class.getClassLoader())));
         this.version = ((String) in.readValue((String.class.getClassLoader())));
         this.author = ((String) in.readValue((String.class.getClassLoader())));
@@ -101,11 +100,11 @@ public class WordDefinition extends RealmObject implements Parcelable {
         this.response = response;
     }
 
-    public Meaning getMeaning() {
+    public WordMeaning getMeaning() {
         return meaning;
     }
 
-    public void setMeaning(Meaning meaning) {
+    public void setMeaning(WordMeaning meaning) {
         this.meaning = meaning;
     }
 

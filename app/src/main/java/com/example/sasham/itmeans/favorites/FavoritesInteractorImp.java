@@ -1,15 +1,10 @@
 package com.example.sasham.itmeans.favorites;
 
 
-import com.example.sasham.itmeans.data.network.TwinWordApi;
-import com.example.sasham.itmeans.data.network.WordAssociation;
-import com.example.sasham.itmeans.data.network.WordDefinition;
-import com.example.sasham.itmeans.data.network.db.FavoriteWord;
-import com.example.sasham.itmeans.data.network.db.RecentWord;
+import com.example.sasham.itmeans.data.db.model.FavoriteWord;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.realm.Realm;
 import io.realm.Sort;
 

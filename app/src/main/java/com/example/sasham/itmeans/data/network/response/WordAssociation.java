@@ -1,16 +1,21 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
 
-import java.util.List;
+/**
+ * Created by Sasha M on 15.04.2018.
+ */
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
 
-public class WordTheme implements Parcelable {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
+public class WordAssociation extends RealmObject implements Parcelable {
 
     @SerializedName("entry")
     @Expose
@@ -21,9 +26,12 @@ public class WordTheme implements Parcelable {
     @SerializedName("response")
     @Expose
     private String response;
-    @SerializedName("theme")
+    @SerializedName("assoc_word")
     @Expose
-    private List<String> theme = null;
+    private RealmList<String> assocWord = null;
+    @SerializedName("assoc_word_ex")
+    @Expose
+    private RealmList<String> assocWordEx = null;
     @SerializedName("version")
     @Expose
     private String version;
@@ -39,27 +47,28 @@ public class WordTheme implements Parcelable {
     @SerializedName("result_msg")
     @Expose
     private String resultMsg;
-    public final static Parcelable.Creator<WordTheme> CREATOR = new Creator<WordTheme>() {
+    public final static Parcelable.Creator<WordAssociation> CREATOR = new Creator<WordAssociation>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public WordTheme createFromParcel(Parcel in) {
-            return new WordTheme(in);
+        public WordAssociation createFromParcel(Parcel in) {
+            return new WordAssociation(in);
         }
 
-        public WordTheme[] newArray(int size) {
-            return (new WordTheme[size]);
+        public WordAssociation[] newArray(int size) {
+            return (new WordAssociation[size]);
         }
 
     };
 
-    protected WordTheme(Parcel in) {
+    protected WordAssociation(Parcel in) {
         this.entry = ((String) in.readValue((String.class.getClassLoader())));
         this.request = ((String) in.readValue((String.class.getClassLoader())));
         this.response = ((String) in.readValue((String.class.getClassLoader())));
-        in.readList(this.theme, (java.lang.String.class.getClassLoader()));
+        in.readList(this.assocWord, (java.lang.String.class.getClassLoader()));
+        in.readList(this.assocWordEx, (java.lang.String.class.getClassLoader()));
         this.version = ((String) in.readValue((String.class.getClassLoader())));
         this.author = ((String) in.readValue((String.class.getClassLoader())));
         this.email = ((String) in.readValue((String.class.getClassLoader())));
@@ -67,7 +76,7 @@ public class WordTheme implements Parcelable {
         this.resultMsg = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public WordTheme() {
+    public WordAssociation() {
     }
 
     public String getEntry() {
@@ -94,12 +103,20 @@ public class WordTheme implements Parcelable {
         this.response = response;
     }
 
-    public List<String> getTheme() {
-        return theme;
+    public List<String> getAssocWord() {
+        return assocWord;
     }
 
-    public void setTheme(List<String> theme) {
-        this.theme = theme;
+    public void setAssocWord(List<String> assocWord) {
+        this.assocWord = (RealmList<String>) assocWord;
+    }
+
+    public List<String> getAssocWordEx() {
+        return assocWordEx;
+    }
+
+    public void setAssocWordEx(List<String> assocWordEx) {
+        this.assocWordEx = (RealmList<String>) assocWordEx;
     }
 
     public String getVersion() {
@@ -147,7 +164,8 @@ public class WordTheme implements Parcelable {
         dest.writeValue(entry);
         dest.writeValue(request);
         dest.writeValue(response);
-        dest.writeList(theme);
+        dest.writeList(assocWord);
+        dest.writeList(assocWordEx);
         dest.writeValue(version);
         dest.writeValue(author);
         dest.writeValue(email);
@@ -159,4 +177,12 @@ public class WordTheme implements Parcelable {
         return 0;
     }
 
+    @Override
+    public String toString() {
+        return "WordAssociation{" +
+                "entry='" + entry + '\'' +
+                ", assocWord=" + assocWord +
+                ", author='" + author + '\'' +
+                '}';
+    }
 }

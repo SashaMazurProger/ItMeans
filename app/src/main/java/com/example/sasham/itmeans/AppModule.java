@@ -2,6 +2,7 @@ package com.example.sasham.itmeans;
 
 import android.content.Context;
 
+import com.example.sasham.itmeans.data.DataRepository;
 import com.example.sasham.itmeans.favorites.FavoritesActivity;
 import com.example.sasham.itmeans.favorites.FavoritesModule;
 import com.example.sasham.itmeans.favorites.FavoritesScope;
@@ -12,6 +13,7 @@ import com.example.sasham.itmeans.search.DetailsScope;
 import com.example.sasham.itmeans.search.SearchActivity;
 import com.example.sasham.itmeans.search.WordDetailsModule;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.android.ContributesAndroidInjector;
@@ -32,4 +34,5 @@ public interface AppModule {
     @RecentsScope
     @ContributesAndroidInjector(modules = {RecentsModule.class})
     RecentsActivity recentsInjector();
+
 }

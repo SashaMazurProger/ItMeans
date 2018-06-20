@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network.offline;
+package com.example.sasham.itmeans.data.offline;
 
 
 import com.google.common.util.concurrent.Futures;

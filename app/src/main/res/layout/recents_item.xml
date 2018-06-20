@@ -6,7 +6,7 @@
 
         <variable
             name="recent"
-            type="com.example.sasham.itmeans.data.network.db.RecentWord" />
+            type="com.example.sasham.itmeans.data.db.model.RecentWord" />
     </data>
 
     <RelativeLayout

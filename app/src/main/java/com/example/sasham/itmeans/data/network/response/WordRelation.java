@@ -1,4 +1,4 @@
-package com.example.sasham.itmeans.data.network;
+package com.example.sasham.itmeans.data.network.response;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,9 +6,10 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Relation implements Parcelable
-{
+import io.realm.RealmObject;
 
+public class WordRelation extends RealmObject implements Parcelable
+{
     @SerializedName("broad_terms")
     @Expose
     private String broadTerms;
@@ -30,24 +31,24 @@ public class Relation implements Parcelable
     @SerializedName("derived_terms")
     @Expose
     private String derivedTerms;
-    public final static Creator<Relation> CREATOR = new Creator<Relation>() {
+    public final static Creator<WordRelation> CREATOR = new Creator<WordRelation>() {
 
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public Relation createFromParcel(Parcel in) {
-            return new Relation(in);
+        public WordRelation createFromParcel(Parcel in) {
+            return new WordRelation(in);
         }
 
-        public Relation[] newArray(int size) {
-            return (new Relation[size]);
+        public WordRelation[] newArray(int size) {
+            return (new WordRelation[size]);
         }
 
     }
             ;
 
-    protected Relation(Parcel in) {
+    protected WordRelation(Parcel in) {
         this.broadTerms = ((String) in.readValue((String.class.getClassLoader())));
         this.narrowTerms = ((String) in.readValue((String.class.getClassLoader())));
         this.relatedTerms = ((String) in.readValue((String.class.getClassLoader())));
@@ -57,7 +58,7 @@ public class Relation implements Parcelable
         this.derivedTerms = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public Relation() {
+    public WordRelation() {
     }
 
     public String getBroadTerms() {
