@@ -54,7 +54,9 @@
                 android:layout_height="wrap_content"
                 android:text="@{wordModel.definition.meaning.verb}" />
 
+
             <TextView
+                android:id="@+id/noun_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/definition_noun_title" />
@@ -97,6 +99,16 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="@{wordModel.isLoading ? View.VISIBLE : View.GONE }" />
+
+        <Button
+            android:id="@+id/b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </layout>
