@@ -3,7 +3,7 @@ package com.example.sasham.itmeans.search;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
-import com.example.sasham.itmeans.BaseApplication;
 import com.example.sasham.itmeans.R;
 
 import com.example.sasham.itmeans.databinding.ActivitySearchBinding;
@@ -25,20 +25,24 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
     public static final String STRING_WORD_EXTRA = "word_extra";
     public static final String SEARCH_WORD = "search_word";
+    public static final String START_SEARCH_WORD = "start_search_word";
 
     private WordDetailsViewModel wordDetailsViewModel;
     private ActivitySearchBinding binding;
     private SearchView search;
+
 
     @Inject
     WordDetailsViewModel.Factory factory;
@@ -56,31 +60,12 @@ public class SearchActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setWordModel(wordDetailsViewModel);
-//        wordDetailsViewModel.getStatus()
-//                .addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-//                    @Override
-//                    public void onPropertyChanged(Observable sender, int propertyId) {
-//                        switch (wordDetailsViewModel.getStatus().get()) {
-//                            case LOADING:
-//                                onLoading();
-//                                break;
-//                            case SUCCESS:
-//                                onSuccess();
-//                                break;
-//                            case ERROR:
-//                                onError();
-//                                break;
-//                            default:
-//                                onError();
-//                        }
-//                    }
-//                });
 
-        onError();
-        checkIntentData();
+        onEmptyResult();
+        checkIntent();
     }
 
-    private void checkIntentData() {
+    private void checkIntent() {
         Intent intent = getIntent();
         if (intent != null) {
             String action = intent.getAction();
@@ -88,6 +73,18 @@ public class SearchActivity extends AppCompatActivity {
                 String word = intent.getStringExtra(STRING_WORD_EXTRA);
                 if (word != null && !word.isEmpty())
                     wordDetailsViewModel.search(word);
+            }
+        }
+    }
+
+    private void checkIfNeedFocuseOnSearchView() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action.equals(START_SEARCH_WORD)) {
+                search.setFocusable(true);
+                search.setIconified(false);
+                search.requestFocusFromTouch();
             }
         }
     }
@@ -124,38 +121,37 @@ public class SearchActivity extends AppCompatActivity {
                 .distinctUntilChanged()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((word) -> wordDetailsViewModel.search(word), (e) -> onError());
+                .subscribe((word) -> wordDetailsViewModel.search(word), (e) -> onEmptyResult());
+
+        checkIfNeedFocuseOnSearchView();
 
         return true;
     }
 
-    public void onLoading() {
-        binding.emptyView.setVisibility(View.GONE);
-        binding.resultContainer.setVisibility(View.GONE);
-        binding.progress.setVisibility(View.VISIBLE);
-    }
+////    public void onLoading() {
+////        binding.emptyView.setVisibility(View.GONE);
+////        binding.resultContainer.setVisibility(View.GONE);
+////        binding.progress.setVisibility(View.VISIBLE);
+////    }
+////
+////    public void onSuccess() {
+////        binding.emptyView.setVisibility(View.GONE);
+////        binding.resultContainer.setVisibility(View.VISIBLE);
+////        binding.progress.setVisibility(View.GONE);
+////    }
 
-    public void onSuccess() {
-        binding.emptyView.setVisibility(View.GONE);
-        binding.resultContainer.setVisibility(View.VISIBLE);
-        binding.progress.setVisibility(View.GONE);
-    }
-
-    public void onError() {
-        Log.d(TAG, "onError: ---");
+    public void onEmptyResult() {
+        Log.d(TAG, "onEmptyResult: ---");
         binding.emptyView.setVisibility(View.VISIBLE);
         binding.resultContainer.setVisibility(View.GONE);
         binding.progress.setVisibility(View.GONE);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         wordDetailsViewModel.dispose();
     }
+
 }

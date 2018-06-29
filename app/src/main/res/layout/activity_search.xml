@@ -100,15 +100,6 @@
             android:layout_centerInParent="true"
             android:visibility="@{wordModel.isLoading ? View.VISIBLE : View.GONE }" />
 
-        <Button
-            android:id="@+id/b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/et"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </layout>
