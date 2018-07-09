@@ -3,7 +3,6 @@ package com.example.sasham.itmeans.search;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.example.sasham.itmeans.R;
 
@@ -25,19 +23,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
     public static final String STRING_WORD_EXTRA = "word_extra";
-    public static final String SEARCH_WORD = "search_word";
-    public static final String START_SEARCH_WORD = "start_search_word";
+    public static final String SEARCH_WORD_ACTION = "search_word";
+    public static final String SEARCH_WITH_FOCUS_ACTION = "start_search_word";
 
     private WordDetailsViewModel wordDetailsViewModel;
     private ActivitySearchBinding binding;
@@ -69,7 +63,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             String action = intent.getAction();
-            if (action.equals(SEARCH_WORD)) {
+            if (action.equals(SEARCH_WORD_ACTION)) {
                 String word = intent.getStringExtra(STRING_WORD_EXTRA);
                 if (word != null && !word.isEmpty())
                     wordDetailsViewModel.search(word);
@@ -81,7 +75,7 @@ public class SearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             String action = intent.getAction();
-            if (action.equals(START_SEARCH_WORD)) {
+            if (action.equals(SEARCH_WITH_FOCUS_ACTION)) {
                 search.setFocusable(true);
                 search.setIconified(false);
                 search.requestFocusFromTouch();

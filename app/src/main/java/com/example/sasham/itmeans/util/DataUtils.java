@@ -12,6 +12,9 @@ public class DataUtils {
             stringBuilder.append(recentWord.getEntry());
             stringBuilder.append(",");
         }
+        if(stringBuilder.length()>0){
+            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        }
         return stringBuilder.toString();
     }
 }

@@ -24,6 +24,7 @@
             android:orientation="vertical"
             android:visibility="@{!wordModel.isSuccess ? View.GONE : View.VISIBLE}">
 
+
             <ImageButton
                 android:id="@+id/add_favorite"
                 android:layout_width="24dp"

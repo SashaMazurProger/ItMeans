@@ -56,7 +56,7 @@ public class FavoritesActivity extends AppCompatActivity {
             public void onItemClick(View itemRoot, FavoriteWord item, int position) {
                 Intent intent = new Intent(FavoritesActivity.this, SearchActivity.class);
                 intent.putExtra(SearchActivity.STRING_WORD_EXTRA, item.getEntry());
-                intent.setAction(SearchActivity.SEARCH_WORD);
+                intent.setAction(SearchActivity.SEARCH_WORD_ACTION);
                 startActivity(intent);
             }
 

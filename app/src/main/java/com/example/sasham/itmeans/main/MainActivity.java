@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,19 +20,20 @@ import com.example.sasham.itmeans.favorites.FavoritesActivity;
 import com.example.sasham.itmeans.recents.RecentsActivity;
 import com.example.sasham.itmeans.search.SearchActivity;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HasSupportFragmentInjector {
 
-//    @BindView(R.id.recents_preview_container)
-//    public FrameLayout recentsFrameLayout;
-//
-//    @BindView(R.id.recents_preview_container)
-//    public FrameLayout dayWordFrameLayout;
-//
-//    @BindView(R.id.recents_preview_container)
-//    public FrameLayout searchServiceFrameLayout;
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        AndroidInjection.inject(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar_base);
         setSupportActionBar(toolbar);
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
 
                 Intent intent=new Intent(MainActivity.this, SearchActivity.class);
-                intent.setAction(SearchActivity.START_SEARCH_WORD);
+                intent.setAction(SearchActivity.SEARCH_WITH_FOCUS_ACTION);
                 startActivity(intent);
             }
         });
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     private void setRecentsFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.recents_preview_container,RecentsFragment.newInstance())
+                .replace(R.id.recents_preview_container, ConcatedRecentsFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
     }
@@ -158,5 +162,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
     }
 }
